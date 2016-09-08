@@ -40,7 +40,6 @@ class JoinableObject():
         message = Message(method,data)
         self.queues.get(method_class_name).put(message)
 
-
     def get_class_of_method(self,meth):
         if inspect.ismethod(meth):
             for cls in inspect.getmro(meth.__self__.__class__):

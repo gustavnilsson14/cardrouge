@@ -9,6 +9,8 @@ import arcade,time,sys
 from multiprocessing import Process, Queue
 sys.path.append('src')
 sys.path.append('src/core')
+sys.path.append('src/gameobject')
+sys.path.append('src/map')
 from game import *
 from windowhandler import WindowHandler
 from message import *
