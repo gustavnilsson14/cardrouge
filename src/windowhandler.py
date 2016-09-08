@@ -12,7 +12,7 @@ class WindowHandler(arcade.Window,JoinableObject):
         JoinableObject.__init__(self,queues)
 
         # Sprite lists
-        self.all_sprites_list = None
+        self.all_sprites_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
@@ -32,11 +32,19 @@ class WindowHandler(arcade.Window,JoinableObject):
         arcade.set_background_color((255,0,0))
 
     def add_sprites(self,data):
-        #wall = arcade.Sprite("brick_wall_tiled_perfect.png", self.defaults.get('scaling'))
-        #wall.center_x = 1500
-        #wall.center_y = 50
-        #self.all_sprites_list.append(wall)
-        pass
+        self.all_sprites_list = arcade.SpriteList()
+        for tile in data:
+            (x, z) = tile.to_iso()
+            x = (x * (self.defaults.get('tile_size')*self.defaults.get('scaling')))+300;
+            raw_z = (z * (self.defaults.get('tile_size')*self.defaults.get('scaling')))+100;
+
+            for y, entity in enumerate(tile.entities):
+                z = raw_z + self.defaults.get('scaling')*(entity.height*y);
+
+                entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
+                entity_sprite.center_x = x
+                entity_sprite.center_y = z
+                self.all_sprites_list.append(entity_sprite)
 
     def remove_sprites(self,data):
         pass
@@ -47,8 +55,9 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_draw(self):
         arcade.start_render()
+        self.join()
 
-        #self.all_sprites_list.draw()
+        self.all_sprites_list.draw()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:

@@ -5,23 +5,28 @@ from windowhandler import WindowHandler
 from mapgen import MapGen
 from player import *
 from unit import *
+from scene import *
+import time
 
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
         JoinableObject.__init__(self,queues)
+
         self.mapgen_process = self.start_mapgen_process()
-        player_unit = TestUnit((3,3,3))
+        #player_unit = TestUnit((3,3,3))
         self.player = Player()
+
+        test_map = Map(10,10)
+
+        self.map_sprite_list = test_map.grid
         while 1:
-            self.join()
             self.update()
-            time.sleep(0.00001)
+            time.sleep(0.01)
 
     def update(self):
         self.join()
-        pass
-        #self.run(WindowHandler.add_sprites,Test())
+        self.run(WindowHandler.add_sprites, self.map_sprite_list)
 
     def key_press(self,data):
         self.player.key_press(data)
@@ -30,13 +35,12 @@ class Game(JoinableObject):
         self.player.key_release(data)
 
     def start_mapgen_process(self):
+        return
         mapgen_queues = {
             'Game': self.queues.get('input'),
             'input': self.queues.get('MapGen')
         }
-        print("-"*50)
         mapgen_process = Process(target=MapGen,args=(mapgen_queues))
-        print("-"*50)
         mapgen_process.start()
         return mapgen_process
 

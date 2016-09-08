@@ -1,3 +1,5 @@
+from entity import Prop
+
 class Doodad(Prop):
     pass
 

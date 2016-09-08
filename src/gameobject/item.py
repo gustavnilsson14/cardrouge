@@ -1,3 +1,5 @@
+from entity import Item
+
 class Card(Item):
     pass
 

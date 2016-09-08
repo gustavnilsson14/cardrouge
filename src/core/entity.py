@@ -1,14 +1,7 @@
 class Entity:
 
-    def __init__(self,vector):
-        self.x = vector[0]
-        self.y = vector[1]
-        self.z = vector[2]
-
-    def move(self,vector):
-        self.x += vector[0]
-        self.y += vector[1]
-        self.z += vector[2]
+    def __init__(self):
+        pass
 
     def destroy(self):
         pass
@@ -17,17 +10,12 @@ class Block(Entity):
 
     def __init__(self):
         Entity.__init__(self)
+        self.height = 30
 
 class Unit(Entity):
 
-    def __init__(self,vector):
-        Entity.__init__(self,vector)
-
-    def move(self, vector):
-        self.can_move_to(vector)
-
-    def can_move_to(self,vector):
-        return 0
+    def __init__(self):
+        Entity.__init__(self)
 
 class Prop(Entity):
 

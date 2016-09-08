@@ -1,14 +1,14 @@
-from entity import *
+from entity import Unit
 
 class GroundUnit(Unit):
 
-    def __init__(self,vector):
-        Unit.__init__(self,vector)
+    def __init__(self):
+        Unit.__init__(self)
 
 class AirUnit(Unit):
     pass
 
 class TestUnit(GroundUnit):
 
-    def __init__(self,vector):
-        GroundUnit.__init__(self,vector)
+    def __init__(self):
+        GroundUnit.__init__(self)

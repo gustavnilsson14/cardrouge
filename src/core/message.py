@@ -19,7 +19,6 @@ class JoinableObject():
         return method_index
 
     def run_method_by_index(self,index,data):
-        print(index,data)
         method = self.__class__.method_index.get(index)
         getattr(self,method)(data)
 

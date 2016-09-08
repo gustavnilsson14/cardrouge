@@ -11,6 +11,7 @@ class MapGen(JoinableObject):
         JoinableObject.__init__(self,queues)
         self.maps = []
         self.max_maps = 50
+        return
         while 1:
             if self.join():
                 continue

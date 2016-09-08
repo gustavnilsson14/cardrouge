@@ -15,32 +15,35 @@ from game import *
 from windowhandler import WindowHandler
 from message import *
 
-defaults = {
-    'width': 1280,
-    'height': 720,
-    'scaling': 1
-}
+if __name__ == '__main__':
 
-windowhandler_in_q = Queue()
-game_in_q = Queue()
-mapgen_in_q = Queue()
+    defaults = {
+        'width': 800,
+        'height': 600,
+        'scaling': 1.5,
+        'tile_size': 30
+    }
 
-windowhandler_queues = {
-    'Game': game_in_q,
-    'input': windowhandler_in_q
-}
-game_queues = {
-    'MapGen': mapgen_in_q,
-    'WindowHandler': windowhandler_in_q,
-    'input': game_in_q
-}
+    windowhandler_in_q = Queue()
+    game_in_q = Queue()
+    mapgen_in_q = Queue()
 
-def start_game_process(queues,defaults):
-    game_process = Process(target=Game,args=(queues,defaults))
-    game_process.start()
-    return game_process
+    windowhandler_queues = {
+        'Game': game_in_q,
+        'input': windowhandler_in_q
+    }
+    game_queues = {
+        'MapGen': mapgen_in_q,
+        'WindowHandler': windowhandler_in_q,
+        'input': game_in_q
+    }
 
-game_process = start_game_process(game_queues,defaults)
+    def start_game_process(queues,defaults):
+        game_process = Process(target=Game,args=(queues,defaults))
+        game_process.start()
+        return game_process
 
-window = WindowHandler(windowhandler_queues,defaults,game_process)
-arcade.run()
+    game_process = start_game_process(game_queues,defaults)
+
+    window = WindowHandler(windowhandler_queues,defaults,game_process)
+    arcade.run()
