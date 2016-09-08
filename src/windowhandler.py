@@ -11,7 +11,7 @@ class WindowHandler(arcade.Window,JoinableObject):
         JoinableObject.__init__(self,queues)
 
         # Sprite lists
-        self.all_sprites_list = None
+        self.all_sprites_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
@@ -31,6 +31,8 @@ class WindowHandler(arcade.Window,JoinableObject):
         arcade.set_background_color((255,0,0))
 
     def add_sprites(self,data):
+
+        self.all_sprites_list = data
         #wall = arcade.Sprite("brick_wall_tiled_perfect.png", self.defaults.get('scaling'))
         #wall.center_x = 1500
         #wall.center_y = 50
@@ -46,8 +48,9 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_draw(self):
         arcade.start_render()
+        self.join()
 
-        #self.all_sprites_list.draw()
+        self.all_sprites_list.draw()
 
     def on_key_press(self, key, modifiers):
         """

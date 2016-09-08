@@ -1,20 +1,26 @@
 from message import JoinableObject
 from windowhandler import WindowHandler
+from scene import *
 import time
 
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
         JoinableObject.__init__(self,queues)
+
+        test_map = Map()
+        self.map_sprite_list = test_map.create_map()
+        self.run(WindowHandler.add_sprites, self.map_sprite_list)
+
         while 1:
             self.join()
             self.update()
             time.sleep(0.00001)
 
     def update(self):
+
         self.join()
-        pass
-        #self.run(WindowHandler.add_sprites,Test())
+
 
     def key_press(self,data):
         print(data)
