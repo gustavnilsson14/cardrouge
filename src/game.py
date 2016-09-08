@@ -1,11 +1,13 @@
 from message import JoinableObject
 from windowhandler import WindowHandler
-import time
+from player import *
+import time, arcade
 
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
         JoinableObject.__init__(self,queues)
+        self.player = Player()
         while 1:
             self.join()
             self.update()
@@ -17,10 +19,10 @@ class Game(JoinableObject):
         #self.run(WindowHandler.add_sprites,Test())
 
     def key_press(self,data):
-        print(data)
+        self.player.key_press(data)
 
     def key_release(self,data):
-        print(data)
+        self.player.key_release(data)
 
 class Test:
 
