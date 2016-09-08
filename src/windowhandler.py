@@ -1,6 +1,6 @@
 import arcade, time
 from message import JoinableObject
-from game import *
+import game
 
 class WindowHandler(arcade.Window,JoinableObject):
     """ Main application class. """
@@ -53,23 +53,10 @@ class WindowHandler(arcade.Window,JoinableObject):
         """
         Called whenever the mouse moves.
         """
-        if key == arcade.key.UP:
-            self.player_sprite.change_y = MOVEMENT_SPEED
-        elif key == arcade.key.DOWN:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        elif key == arcade.key.LEFT:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT:
-            self.player_sprite.change_x = MOVEMENT_SPEED
+        self.run(game.Game.key_press,key)
 
     def on_key_release(self, key, modifiers):
-        """
-        Called when the user presses a mouse button.
-        """
-        if key == arcade.key.UP or key == arcade.key.DOWN:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
-            self.player_sprite.change_x = 0
+        self.run(game.Game.key_release,key)
 
     def animate(self, delta_time):
         """ Movement and game logic """
