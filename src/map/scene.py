@@ -14,7 +14,7 @@ class Map:
            [0,0,0,0,0,0,0]]
 
     def __init__(self):
-        self.wall_list = arcade.SpriteList()
+        self.wall_list = [];
 
     def create_map(self):
         world_map = Map.MAP
@@ -32,12 +32,7 @@ class Map:
         x = (x * (Map.TILE_SIZE*Map.SPRITE_SCALING))+300;
         y = (y * (Map.TILE_SIZE*Map.SPRITE_SCALING))-100;
         (x, y) = IsoConverter.to_iso(Point(x, y)).as_tuple()
-
-
-
-        wall = arcade.Sprite("res/sprites/blocks/grass.png", Map.SPRITE_SCALING)
+        
         y += 4*Map.SPRITE_SCALING*(4*(tile_in_height));
 
-        wall.center_x = x
-        wall.center_y = y
-        self.wall_list.append(wall)
+        self.wall_list += [["res/sprites/blocks/grass.png", x, y]]

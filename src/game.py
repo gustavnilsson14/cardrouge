@@ -10,7 +10,7 @@ class Game(JoinableObject):
 
         test_map = Map()
         self.map_sprite_list = test_map.create_map()
-        self.run(WindowHandler.add_sprites, self.map_sprite_list)
+
 
         while 1:
             self.join()
@@ -18,7 +18,7 @@ class Game(JoinableObject):
             time.sleep(0.00001)
 
     def update(self):
-
+        self.run(WindowHandler.add_sprites, self.map_sprite_list)
         self.join()
 
 

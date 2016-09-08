@@ -31,13 +31,12 @@ class WindowHandler(arcade.Window,JoinableObject):
         arcade.set_background_color((255,0,0))
 
     def add_sprites(self,data):
-
-        self.all_sprites_list = data
-        #wall = arcade.Sprite("brick_wall_tiled_perfect.png", self.defaults.get('scaling'))
-        #wall.center_x = 1500
-        #wall.center_y = 50
-        #self.all_sprites_list.append(wall)
-        pass
+        self.all_sprites_list = arcade.SpriteList()
+        for tile in data:
+            wall = arcade.Sprite(tile[0], self.defaults.get('scaling'))
+            wall.center_x = tile[1]
+            wall.center_y = tile[2]
+            self.all_sprites_list.append(wall)
 
     def remove_sprites(self,data):
         pass
@@ -48,6 +47,7 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_draw(self):
         arcade.start_render()
+    
         self.join()
 
         self.all_sprites_list.draw()
