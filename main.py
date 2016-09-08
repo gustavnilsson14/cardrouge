@@ -10,7 +10,7 @@ from multiprocessing import Process, Queue
 sys.path.append('src')
 sys.path.append('src/core')
 from game import *
-from draw import WindowHandler
+from windowhandler import WindowHandler
 from message import *
 
 defaults = {

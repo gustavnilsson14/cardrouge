@@ -1,5 +1,5 @@
 from message import JoinableObject
-from draw import WindowHandler
+from windowhandler import WindowHandler
 import time
 
 
