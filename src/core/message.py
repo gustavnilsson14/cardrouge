@@ -24,11 +24,14 @@ class JoinableObject():
         getattr(self,method)(data)
 
     def join(self):
+        joined_data = 0
         while not self.queues.get('input').empty():
+            joined_data = 1
             message = self.queues.get('input').get()
             if message.to != None:
                 pass
             self.run_method_by_index(message.method,message.data)
+        return joined_data
 
     def run(self,method,data):
         method_class_name = method.__qualname__.split('.')[0]

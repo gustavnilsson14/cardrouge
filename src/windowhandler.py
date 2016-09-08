@@ -5,8 +5,9 @@ import game
 class WindowHandler(arcade.Window,JoinableObject):
     """ Main application class. """
 
-    def __init__(self, queues, defaults):
+    def __init__(self, queues, defaults,game_process):
         self.defaults = defaults
+        self.game_process = game_process
         super().__init__(self.defaults.get('width'), self.defaults.get('height'))
         JoinableObject.__init__(self,queues)
 
@@ -50,9 +51,9 @@ class WindowHandler(arcade.Window,JoinableObject):
         #self.all_sprites_list.draw()
 
     def on_key_press(self, key, modifiers):
-        """
-        Called whenever the mouse moves.
-        """
+        if key == arcade.key.ESCAPE:
+            self.game_process.terminate()
+            exit(0)
         self.run(game.Game.key_press,key)
 
     def on_key_release(self, key, modifiers):
