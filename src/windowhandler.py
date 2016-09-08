@@ -25,47 +25,30 @@ class WindowHandler(arcade.Window,JoinableObject):
         """ Set up the game and initialize the variables. """
         self.join()
 
-        # Sprite lists
-        self.all_sprites_list = arcade.SpriteList()
-        self.wall_list = arcade.SpriteList()
+        #self.all_sprites_list = arcade.SpriteList()
 
-        # Set up the player
-        self.score = 0
-        self.player_sprite = arcade.Sprite("link-perfect-small.png",self.defaults.get('scaling'))
+        #self.all_sprites_list.append(self.player_sprite)
 
-        self.all_sprites_list.append(self.player_sprite)
-
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                         self.wall_list)
-        # Set the background color
         arcade.set_background_color((255,0,0))
 
     def add_sprites(self,data):
-        print("-"*50)
+        #wall = arcade.Sprite("brick_wall_tiled_perfect.png", self.defaults.get('scaling'))
+        #wall.center_x = 1500
+        #wall.center_y = 50
+        #self.all_sprites_list.append(wall)
+        pass
 
-        print(data.x)
-        print(data.y)
+    def remove_sprites(self,data):
+        pass
+
+    def add_text(self,data):
+        pass
+        #arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
 
     def on_draw(self):
-        """
-        Render the screen.
-        """
-
-        #self.fetch_game_information()
-
-        # This command has to happen before we start drawing
         arcade.start_render()
-        #self.get_packages()
-        # Draw all the sprites.
-        self.all_sprites_list.draw()
 
-        # Put the text on the screen.
-        output = "Score: {}".format(self.score)
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
-        wall = arcade.Sprite("brick_wall_tiled_perfect.png", self.defaults.get('scaling'))
-        wall.center_x = 1500
-        wall.center_y = 50
-        self.all_sprites_list.append(wall)
+        #self.all_sprites_list.draw()
 
     def on_key_press(self, key, modifiers):
         """
