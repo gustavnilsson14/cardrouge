@@ -12,7 +12,6 @@ class WindowHandler(arcade.Window,JoinableObject):
 
         # Sprite lists
         self.all_sprites_list = None
-        self.coin_list = None
 
         # Set up the player
         self.score = 0
