@@ -1,12 +1,16 @@
 import json,inspect
+from multiprocessing import Process, Queue
 
 class JoinableObject():
+
+    JOIN_LIMIT = 100
 
     method_index = {}
 
     def __init__(self,queues):
         self.__class__.method_index = self.__class__.methods_to_ints()
         self.queues = queues
+        self.child_processes = []
 
     @classmethod
     def methods_to_ints(cls,foreign_reference = 0):
@@ -24,8 +28,9 @@ class JoinableObject():
 
     def join(self):
         joined_data = 0
-        while not self.queues.get('input').empty():
-            joined_data = 1
+
+        while not self.queues.get('input').empty() and joined_data < JoinableObject.JOIN_LIMIT:
+            joined_data += 1
             message = self.queues.get('input').get()
             if message.to != None:
                 pass
@@ -53,6 +58,15 @@ class JoinableObject():
             if isinstance(cls, type):
                 return cls
         return None
+
+    def start_child_process(self,target):
+        queues = {
+            self.__class__.__name__: self.queues.get('input'),
+            'input': self.queues.get(target.__name__)
+        }
+        new_process = Process(target=target,args=(queues,))
+        new_process.start()
+        self.child_processes += [new_process]
 
 class Message:
 

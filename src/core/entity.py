@@ -10,7 +10,7 @@ class Block(Entity):
 
     def __init__(self):
         Entity.__init__(self)
-        self.height = 30
+        self.height = 15
 
 class Unit(Entity):
 

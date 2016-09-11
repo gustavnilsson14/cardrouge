@@ -1,8 +1,7 @@
 import time, arcade
-from multiprocessing import Process, Queue
 from message import JoinableObject
 from windowhandler import WindowHandler
-from mapgen import MapGen
+from mapgen import SceneGen, WorldGen
 from player import *
 from unit import *
 from scene import *
@@ -13,7 +12,7 @@ class Game(JoinableObject):
     def __init__(self,queues,defaults):
         JoinableObject.__init__(self,queues)
 
-        self.mapgen_process = self.start_mapgen_process()
+        self.mapgen_process = self.start_child_process(WorldGen)
         #player_unit = TestUnit((3,3,3))
         self.player = Player()
 
@@ -33,16 +32,6 @@ class Game(JoinableObject):
 
     def key_release(self,data):
         self.player.key_release(data)
-
-    def start_mapgen_process(self):
-        return
-        mapgen_queues = {
-            'Game': self.queues.get('input'),
-            'input': self.queues.get('MapGen')
-        }
-        mapgen_process = Process(target=MapGen,args=(mapgen_queues))
-        mapgen_process.start()
-        return mapgen_process
 
 class Test:
 
