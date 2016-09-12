@@ -16,14 +16,14 @@ class Point:
         self = IsoConverter().to_iso(self)
 
 
-class IsoConverter():
+class IsoConvertableObject:
 
-    def to_iso(point):
-        x = point.x - point.y
-        y = (point.x + point.y) / 2
-        return Point(x, y)
+    def to_iso(self,vector):
+        x = vector[0] - vector[1]
+        y = (vector[0] + vector[1]) / 2
+        return (x,y)
 
-    def to_2d(point):
-        x = (2*point.y + point.x)/2
-        y = (2*point.y - point.x)/2
-        return Point(x, y)
+    def to_2d(self,vector):
+        x = (2*vector[1] + vector[0])/2
+        y = (2*vector[1] - vector[0])/2
+        return (x,y)

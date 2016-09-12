@@ -6,6 +6,8 @@ class WindowHandler(arcade.Window,JoinableObject):
     """ Main application class. """
 
     def __init__(self, queues, defaults,game_process):
+        self.offset = (0,0)
+        self.zoom = 1
         self.defaults = defaults
         self.game_process = game_process
         super().__init__(self.defaults.get('width'), self.defaults.get('height'))
@@ -21,6 +23,10 @@ class WindowHandler(arcade.Window,JoinableObject):
         self.physics_engine = None
         self.setup()
 
+    def move_camera(self,data):
+        self.zoom = data.get('zoom')
+        self.offset = data.get('offset')
+
     def setup(self):
         """ Set up the game and initialize the variables. """
         self.join()
@@ -33,13 +39,15 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def add_sprites(self,data):
         self.all_sprites_list = arcade.SpriteList()
+        data = reversed(data)
         for tile in data:
+            scaling = self.defaults.get('tile_size')*self.defaults.get('scaling')
             (x, z) = tile.to_iso()
-            x = (x * (self.defaults.get('tile_size')*self.defaults.get('scaling')))+300;
-            raw_z = (z * (self.defaults.get('tile_size')*self.defaults.get('scaling')))+100;
+            x = (x * scaling) - (scaling*self.offset[0]) + (self.defaults.get('width')/2)
+            raw_z = (z * scaling) - (scaling*self.offset[1]) + (self.defaults.get('height')/2)
 
             for y, entity in enumerate(tile.entities):
-                z = raw_z + self.defaults.get('scaling')*(entity.height*y);
+                z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height;
 
                 entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
                 entity_sprite.center_x = x
@@ -55,9 +63,8 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_draw(self):
         arcade.start_render()
-        self.join()
-
         self.all_sprites_list.draw()
+        self.join()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:

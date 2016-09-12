@@ -34,6 +34,7 @@ class WorldGen(MapGen):
     SMOOTH_PASSES = 4
 
     def __init__(self,queues):
+        return
         self.regions = []
         self.subregions = []
         self.areas = []

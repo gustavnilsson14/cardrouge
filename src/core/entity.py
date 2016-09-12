@@ -1,6 +1,9 @@
 class Entity:
 
     def __init__(self):
+        self.height = 14
+        self.offset_height = 0
+        self.image = "link-perfect-small.png"
         pass
 
     def destroy(self):
@@ -10,12 +13,15 @@ class Block(Entity):
 
     def __init__(self):
         Entity.__init__(self)
-        self.height = 15
 
 class Unit(Entity):
 
-    def __init__(self):
+    def __init__(self,tile):
         Entity.__init__(self)
+        self.height = 14
+        self.offset_height = 16
+        self.tile = tile
+        self.tile.entities += [self]
 
 class Prop(Entity):
 

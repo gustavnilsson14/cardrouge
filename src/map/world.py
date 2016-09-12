@@ -160,3 +160,14 @@ class AreaFeatures:
         (None,None,range(90,101),TYPE_PEAK),
         (None,None,range(0,Area.OCEAN_LEVEL),TYPE_OCEAN),
     ]
+
+class Civ:
+
+    INDEX_TEMPERAMENT = 0
+    INDEX_HUMANITY = 0
+    INDEX_SPIRITUALISM = 0
+    INDEX_EXPLOITATION = 0
+    INDEX_EXPLOITATION = 0
+
+    def __init__(self,area):
+        self.stats = []

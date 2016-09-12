@@ -10,13 +10,14 @@ import time
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
+        Camera.initialize()
         JoinableObject.__init__(self,queues)
 
         self.mapgen_process = self.start_child_process(WorldGen)
-        #player_unit = TestUnit((3,3,3))
-        self.player = Player()
 
         test_map = Map(10,10)
+        player_unit = TestUnit(test_map.grid[-1])
+        self.player = Player(player_unit)
 
         self.map_sprite_list = test_map.grid
         while 1:
@@ -26,6 +27,7 @@ class Game(JoinableObject):
     def update(self):
         self.join()
         self.run(WindowHandler.add_sprites, self.map_sprite_list)
+        self.run(WindowHandler.move_camera, Camera.get_object())
 
     def key_press(self,data):
         self.player.key_press(data)
