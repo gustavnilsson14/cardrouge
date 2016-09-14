@@ -50,6 +50,7 @@ class WindowHandler(arcade.Window,JoinableObject):
                 z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height;
 
                 entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
+                entity_sprite.alpha = entity.transparent
                 entity_sprite.center_x = x
                 entity_sprite.center_y = z
                 self.all_sprites_list.append(entity_sprite)

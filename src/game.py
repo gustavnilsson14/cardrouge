@@ -17,7 +17,7 @@ class Game(JoinableObject):
 
         test_map = Map(10,10)
         player_unit = TestUnit(test_map.grid[-1])
-        self.player = Player(player_unit)
+        self.player = Player(player_unit, test_map)
 
         self.map_sprite_list = test_map.grid
         while 1:

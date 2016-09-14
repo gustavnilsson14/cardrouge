@@ -66,6 +66,19 @@ class Map:
 
         return grid
 
+    def set_transparent(self, entity):
+        height = entity.tile.entities.index(entity)
+        index = entity.tile.pos[1] + entity.tile.pos[0] * 10
+
+        for tile in entity.tile.neighbors:
+            for block in range(height, len(tile.entities)):
+                tile.entities[block].transparent = 0.5
+
+        #print(tile, height, index)
+
+
+
+
 class Tile:
 
     def __init__(self,pos):
