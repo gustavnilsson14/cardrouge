@@ -12,10 +12,16 @@ class Map:
         for x in range(0,10):
             for z in range(0,10):
                 new_tile = Tile((x,z))
-                for y in range(0,int(random.randint(0,32)/32)+1):
-                    new_tile.add_entity(GroundBlock())
+                #for y in range(0,int(random.randint(0,34)/34)+1):
+                #    new_tile.add_entity(GroundBlock())
+
+                #Custom map for testing fade
+                new_tile.add_entity(GroundBlock())
+                if int(random.randint(0,100)) < 20:
+                    for i in range(0,4):
+                        new_tile.add_entity(GroundBlock())
                 grid += [new_tile]
-        neighbors = [(-1,-1),(-1,0),(-1,1),(1,-1),(1,0),(1,1),(0,-1),(0,1)]
+        neighbors = [(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1),(1,0),(1,1),(0,1)]
         for tile in grid:
             tile_neighbors = []
             for n in neighbors:
@@ -25,7 +31,7 @@ class Map:
             tile.neighbors = tile_neighbors
 
         ramptiles = []
-        for tile in grid:
+        '''for tile in grid:
             if len(tile.entities) == 1:
                 continue
             ramptile = random.choice(tile.neighbors)
@@ -34,16 +40,39 @@ class Map:
             ramptiles +=[ramptile]
 
         for tile in ramptiles:
-            tile.add_entity(RampBlock())
+            tile.add_entity(RampBlock())'''
         return grid
 
     def set_transparent(self, entity):
-        height = entity.tile.entities.index(entity)
-        index = entity.tile.pos[1] + entity.tile.pos[0] * 10
+        for tile in self.grid:
+            for block in tile.entities:
+                block.transparent = 1
 
-        for tile in entity.tile.neighbors:
-            for block in range(height, len(tile.entities)):
-                tile.entities[block].transparent = 0.5
+        #
+        alpha = 0.25
+        alpha_to_distance = 0.1
+        fade_distance = 5
+        fade_angle = 2
+
+        height = entity.tile.entities.index(entity)
+
+        tile = entity.tile
+
+        for tile_distance in range(0, fade_distance):
+            # Make block transparent in 45 degree angle from camera.
+            height_to_distance = height + ( tile_distance * fade_angle ) + 1
+            # Make closes neighbors transparent as well.
+            for neighbor_index in range(0, 3):
+                # Get get number of enities (height) of neighbor tile.
+                entities_on_neighbor = len( tile.neighbors[neighbor_index].entities )
+                if height_to_distance < entities_on_neighbor:
+                    for block_index in range( height_to_distance, entities_on_neighbor ):
+                        # Calculate new alpha depending on height distance to player.
+                        new_alpha = alpha + (alpha_to_distance * ( height_to_distance - block_index ))
+                        tile.neighbors[neighbor_index].entities[block_index].transparent = new_alpha
+                        tile.neighbors[neighbor_index].entities[block_index-1].image="res/sprites/blocks/cliffwall.png"
+
+            tile = tile.neighbors[0]
 
         #print(tile, height, index)
 
