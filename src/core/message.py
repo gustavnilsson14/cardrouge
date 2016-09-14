@@ -1,7 +1,8 @@
-import json,inspect
+from log import Log
+import json,inspect,sys
 from multiprocessing import Process, Queue
 
-class JoinableObject():
+class JoinableObject(Log):
 
     JOIN_LIMIT = 100
 
@@ -28,7 +29,6 @@ class JoinableObject():
 
     def join(self):
         joined_data = 0
-
         while not self.queues.get('input').empty() and joined_data < JoinableObject.JOIN_LIMIT:
             joined_data += 1
             message = self.queues.get('input').get()
@@ -68,6 +68,18 @@ class JoinableObject():
         new_process.start()
         self.child_processes += [new_process]
 
+    def terminate(self):
+        for name, queue in self.queues.items():
+            if name == 'input':
+                continue
+            method = self.__class__.method_index[name].get('terminate')
+            self.log('terminating %s'%(name,))
+            queue.put(Message(method,{}))
+        self.log('terminating myself')
+        exit(0)
+
+
+
 class Message:
 
     def __init__(self,method,data,to=None):
@@ -83,3 +95,42 @@ class MessageError(Exception):
 
         # Now for your custom code...
         self.errors = errors
+
+class ReducableObject(Log):
+    '''
+    Extension for all classes which should be sent through a tcp socket.
+    Handles reducing to dict objects and instantiating the extending classes on the other side
+    return: None
+    input;
+    side effects;
+    '''
+
+    @staticmethod
+    def get_cls(data):
+        _module = data.get('_module')
+        _cls = data.get('_cls')
+        if sys.modules.get(_module):
+            if sys.modules.get(_module).get(_cls):
+                return sys.modules.get(_module).get(_cls)
+            ReducableObject.log('no such class: %s in module: %s'%(_cls,_module,))
+        ReducableObject.log('no such module: %s'%(_module,))
+        return None
+
+    @classmethod
+    def init(cls,data):
+        new_instance = cls()
+        for key,val in data.items():
+            if key == 'cls':
+                continue
+            setattr(new_instance,key,val)
+        return new_instance
+
+    def as_dict(self):
+        data = self.__dict__
+        data['_cls'] = self.__class__.__name__
+        data['_module'] = self.__module__
+        return data
+
+class Test(ReducableObject):
+    def __init__(self):
+        self.test = 'test'

@@ -26,8 +26,8 @@ class Game(JoinableObject):
 
     def update(self):
         self.join()
-        self.run(WindowHandler.add_sprites, self.map_sprite_list)
         self.run(WindowHandler.move_camera, Camera.get_object())
+        self.run(WindowHandler.add_sprites, self.map_sprite_list)
 
     def key_press(self,data):
         self.player.key_press(data)

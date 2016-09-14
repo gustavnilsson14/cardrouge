@@ -68,8 +68,7 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            self.game_process.terminate()
-            exit(0)
+            self.terminate()
         self.run(game.Game.key_press,key)
 
     def on_key_release(self, key, modifiers):
