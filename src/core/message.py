@@ -47,6 +47,11 @@ class JoinableObject(Log):
         message = Message(method,data)
         self.queues.get(method_class_name).put(message)
 
+    def store_methods_of_class(self,method_class_name):
+        if not self.__class__.method_index.get(method_class_name):
+            method_class = self.get_class_of_method(method)
+            self.__class__.method_index[method_class_name] = method_class.methods_to_ints(1)
+
     def get_class_of_method(self,meth):
         if inspect.ismethod(meth):
             for cls in inspect.getmro(meth.__self__.__class__):
