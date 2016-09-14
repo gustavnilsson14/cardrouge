@@ -80,8 +80,6 @@ class JoinableObject(Log):
         self.log('terminating myself')
         exit(0)
 
-
-
 class Message:
 
     def __init__(self,method,data,to=None):
