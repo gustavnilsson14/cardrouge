@@ -12,21 +12,29 @@ class Map:
         for x in range(0,10):
             for z in range(0,10):
                 new_tile = Tile((x,z))
-                for y in range(0,int(random.randint(0,6)/6)+1):
+                for y in range(0,int(random.randint(0,32)/32)+1):
                     new_tile.add_entity(GroundBlock())
                 grid += [new_tile]
         neighbors = [(-1,-1),(-1,0),(-1,1),(1,-1),(1,0),(1,1),(0,-1),(0,1)]
         for tile in grid:
             tile_neighbors = []
             for n in neighbors:
-
-
                 index = (tile.pos[1] + n[1])+((tile.pos[0] + n[0]) * 10)
                 if index > 0 and index < len(grid)-1:
                     tile_neighbors += [grid[index]]
             tile.neighbors = tile_neighbors
 
+        ramptiles = []
+        for tile in grid:
+            if len(tile.entities) == 1:
+                continue
+            ramptile = random.choice(tile.neighbors)
+            if len(ramptile.entities) != 1:
+                continue
+            ramptiles +=[ramptile]
 
+        for tile in ramptiles:
+            tile.add_entity(RampBlock())
         return grid
 
 class Tile:
@@ -45,6 +53,11 @@ class Tile:
         for neighbor in self.neighbors:
             if neighbor.pos[0] == self.pos[0] + vector[0] and neighbor.pos[1] == self.pos[1] + vector[1]:
                 return neighbor
+
+    def get_entity_at(self,height):
+        if len(self.entities) > height:
+            return self.entities[height]
+        return None
 
     def to_iso(self):
         x = self.pos[0] - self.pos[1]
