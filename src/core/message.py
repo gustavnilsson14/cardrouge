@@ -34,6 +34,9 @@ class JoinableObject(Log):
             message = self.queues.get('input').get()
             if message.to != None:
                 pass
+            if message.method == 'terminate':
+                self.terminate()
+                return
             self.run_method_by_index(message.method,message.data)
         return joined_data
 
@@ -46,11 +49,6 @@ class JoinableObject(Log):
         method = self.__class__.method_index[method_class_name].get(method_name)
         message = Message(method,data)
         self.queues.get(method_class_name).put(message)
-
-    def store_methods_of_class(self,method_class_name):
-        if not self.__class__.method_index.get(method_class_name):
-            method_class = self.get_class_of_method(method)
-            self.__class__.method_index[method_class_name] = method_class.methods_to_ints(1)
 
     def get_class_of_method(self,meth):
         if inspect.ismethod(meth):
@@ -77,13 +75,10 @@ class JoinableObject(Log):
         for name, queue in self.queues.items():
             if name == 'input':
                 continue
-            method = self.__class__.method_index[name].get('terminate')
             self.log('terminating %s'%(name,))
-            queue.put(Message(method,{}))
+            queue.put(Message('terminate',{}))
         self.log('terminating myself')
         exit(0)
-
-
 
 class Message:
 

@@ -45,9 +45,10 @@ class WindowHandler(arcade.Window,JoinableObject):
             (x, z) = tile.to_iso()
             x = (x * scaling) - (scaling*self.offset[0]) + (self.defaults.get('width')/2)
             raw_z = (z * scaling) - (scaling*self.offset[1]) + (self.defaults.get('height')/2)
-
+            offset_next_height = 0
             for y, entity in enumerate(tile.entities):
-                z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height;
+                z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height + offset_next_height;
+                offset_next_height = entity.offset_next_height
 
                 entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
                 entity_sprite.alpha = entity.transparent
