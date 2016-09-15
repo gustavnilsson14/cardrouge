@@ -22,7 +22,7 @@ class Game(JoinableObject):
         self.map_sprite_list = test_map.grid
         while 1:
             self.update()
-            time.sleep(0.01)
+            time.sleep(1/60)
 
     def update(self):
         self.join()

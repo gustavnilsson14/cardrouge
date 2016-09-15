@@ -4,6 +4,8 @@ class Entity:
         self.height = 14
         self.offset_height = 0
         self.offset_next_height = 0
+        self.stop_draw = 0
+        self.solid = 0
         self.image = "link-perfect-small.png"
         pass
 
