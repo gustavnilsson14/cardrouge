@@ -40,7 +40,9 @@ class WindowHandler(arcade.Window,JoinableObject):
         arcade.set_background_color((0,0,0))
 
     def add_sprites(self,data):
-        self.all_sprites_list = arcade.SpriteList()
+        for sprite in self.all_sprites_list:
+            self.all_sprites_list.remove(sprite)
+
         data = reversed(data)
         for tile in data:
             scaling = self.defaults.get('tile_size')*self.defaults.get('scaling')
