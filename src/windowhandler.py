@@ -26,6 +26,7 @@ class WindowHandler(arcade.Window,JoinableObject):
     def move_camera(self,data):
         self.zoom = data.get('zoom')
         self.offset = data.get('offset')
+        self.offset_y = data.get('offset_y')
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -48,7 +49,8 @@ class WindowHandler(arcade.Window,JoinableObject):
             x = (x * scaling) - (scaling*self.offset[0]) + (self.defaults.get('width')/2)
             raw_z = (z * scaling) - (scaling*self.offset[1]) + (self.defaults.get('height')/2)
             offset_next_height = 0
-            for y, entity in enumerate(tile.entities):
+            for entity in tile.entities:
+                y = entity.y - self.offset_y
                 z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height + offset_next_height;
                 offset_next_height = entity.offset_next_height
 

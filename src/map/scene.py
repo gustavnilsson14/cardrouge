@@ -1,6 +1,7 @@
 import arcade, random
 from utilities import *
 from block import *
+from bisect import bisect_left
 
 class Map:
 
@@ -25,10 +26,13 @@ class Map:
                 #    new_tile.add_entity(GroundBlock())
 
                 #Custom map for testing fade
-                new_tile.add_entity(GroundBlock())
+                new_tile.add_entity(GroundBlock(0))
+                #if int(random.randint(0,100)) < 20:
+                #    for y in range(1,2):
+                #        new_tile.add_entity(GroundBlock(y))
                 if int(random.randint(0,100)) < 20:
-                    for i in range(0,4):
-                        new_tile.add_entity(GroundBlock())
+                    for y in range(2,3):
+                        new_tile.add_entity(GroundBlock(y))
                 grid += [new_tile]
         neighbors = [(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1),(1,0),(1,1),(0,1)]
         for tile in grid:
@@ -84,8 +88,6 @@ class Map:
                         new_alpha = alpha + (alpha_to_distance * ( height_to_distance - block_index ))
                         tile.neighbors[neighbor_index].entities[block_index].transparent = new_alpha
 
-                        #TODO: Remove line and do something better!
-                        tile.neighbors[neighbor_index].entities[block_index-1].image="res/sprites/blocks/cliffwall.png"
 
             tile = tile.neighbors[0]
 
@@ -97,9 +99,18 @@ class Tile:
         self.neighbors = 0
 
     def add_entity(self,entity):
-        if 1 == 0 : #CHECK IF REALLY ENTITY SUBCLASS
-            return 0
         self.entities += [entity]
+        self.entities.sort(key = lambda new_entity: new_entity.y)
+
+    def get_entity_below(self,entity):
+        index = self.entities.index(entity) -1
+        if index < 0:
+            return 0
+        return self.entities[index]
+
+    def get_entity_at(self,y):
+        pos = Search.binary_search(self.entities,y)
+        return self.entities[pos]
 
     def get_neighbor(self,vector):
         for neighbor in self.neighbors:
@@ -116,12 +127,19 @@ class Tile:
         z = (self.pos[0] + self.pos[1]) / 2
         return (x,z)
 
+class Voxel:
+
+    def __init__(self):
+        self.block = 0
+        self.entities = []
+
 class Camera:
 
     @staticmethod
     def initialize(offset = (0,0)):
         Camera.zoom = 1
         Camera.offset = offset
+        Camera.offset_y = 0
 
     @staticmethod
     def move(vector = (0,0)):
@@ -136,6 +154,7 @@ class Camera:
         return {
             'zoom':Camera.zoom,
             'offset':Camera.to_iso(),
+            'offset_y':Camera.offset_y
         }
 
     @staticmethod

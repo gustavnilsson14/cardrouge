@@ -16,10 +16,11 @@ class Game(JoinableObject):
         self.mapgen_process = self.start_child_process(WorldGen)
 
         test_map = Map(10,10)
-        player_unit = TestUnit(test_map.grid[-1])
+        player_unit = TestUnit(10,test_map.grid[-1])
+        test_map.grid[-1].add_entity(GroundBlock(9))
         self.player = Player(player_unit, test_map)
-
         self.map_sprite_list = test_map.grid
+        self.player.set_camera()
         while 1:
             self.update()
             time.sleep(1/60)

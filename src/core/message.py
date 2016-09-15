@@ -38,6 +38,8 @@ class JoinableObject(Log):
                 self.terminate()
                 return
             self.run_method_by_index(message.method,message.data)
+        if joined_data == JoinableObject.JOIN_LIMIT:
+            print("FUUUUU")
         return joined_data
 
     def run(self,method,data):
