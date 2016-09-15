@@ -35,7 +35,7 @@ class WindowHandler(arcade.Window,JoinableObject):
 
         #self.all_sprites_list.append(self.player_sprite)
 
-        arcade.set_background_color((255,0,0))
+        arcade.set_background_color((0,0,0))
 
     def add_sprites(self,data):
         self.all_sprites_list = arcade.SpriteList()
