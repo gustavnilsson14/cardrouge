@@ -2,33 +2,33 @@ from entity import Unit
 
 class GroundUnit(Unit):
 
-    def __init__(self,tile):
-        Unit.__init__(self,tile)
+    def __init__(self,y,tile):
+        Unit.__init__(self,y,tile)
+        self.fall_speed = 0
 
     def move(self,vector):
-        current_y = self.tile.entities.index(self)
-        target = self.tile.get_neighbor(vector)
-        if not target:
+        if not self.has_footing():
+            self.y -= 1
             return 0
-        if not self.can_move_to(target,current_y):
-            return 0
-        self.tile.entities.remove(self)
-        target.entities += [self]
-        self.tile = target
+        self.fall_speed = 0
+        Unit.move(self,vector)
         return 1
 
-    def can_move_to(self,target,current_y):
-        entity = target.get_entity_at(current_y)
-        if entity == None:
-            return 1
-        if entity.walkable == 1:
-            return 1
-        return 0
+    def has_footing(self):
+        ground_tile = self.tile.get_entity_below(self)
+        if ground_tile.y +1 < self.y:
+            return 0
+        return 1
 
 class AirUnit(Unit):
-    pass
+
+    def __init__(self,y,tile):
+        Unit.__init__(self,y,tile)
+
+    def move(self,vector):
+        Unit.move(self,vector)
 
 class TestUnit(GroundUnit):
 
-    def __init__(self,tile):
-        GroundUnit.__init__(self,tile)
+    def __init__(self,y,tile):
+        GroundUnit.__init__(self,y,tile)
