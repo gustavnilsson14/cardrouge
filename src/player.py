@@ -1,11 +1,12 @@
 import arcade
-from scene import Camera
+from scene import Camera, Map
 
 class Player:
 
-    def __init__(self, controllable_entity = None):
+    def __init__(self, controllable_entity = None, game_map = None):
         self.keys_pressed = []
         self.controllable_entity = controllable_entity
+        self.game_map = game_map
 
     def key_press(self,data):
         if self.controllable_entity == None:
@@ -35,3 +36,4 @@ class Player:
     def move_entity(self,vector):
         self.controllable_entity.move(vector)
         Camera.move_to(self.controllable_entity.tile.pos)
+        self.game_map.set_transparent(self.controllable_entity)

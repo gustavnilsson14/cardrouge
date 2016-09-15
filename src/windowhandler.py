@@ -35,7 +35,7 @@ class WindowHandler(arcade.Window,JoinableObject):
 
         #self.all_sprites_list.append(self.player_sprite)
 
-        arcade.set_background_color((255,0,0))
+        arcade.set_background_color((0,0,0))
 
     def add_sprites(self,data):
         self.all_sprites_list = arcade.SpriteList()
@@ -51,6 +51,7 @@ class WindowHandler(arcade.Window,JoinableObject):
                 offset_next_height = entity.offset_next_height
 
                 entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
+                entity_sprite.alpha = entity.transparent
                 entity_sprite.center_x = x
                 entity_sprite.center_y = z
                 self.all_sprites_list.append(entity_sprite)

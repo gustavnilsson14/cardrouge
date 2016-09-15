@@ -16,7 +16,9 @@ class Block(Entity):
 
     def __init__(self):
         Entity.__init__(self)
+        self.transparent = 1
         self.walkable = 0
+
 
 class Unit(Entity):
 
@@ -25,6 +27,8 @@ class Unit(Entity):
         self.offset_height = 16
         self.tile = tile
         self.tile.entities += [self]
+        self.transparent = 1
+
 
 class Prop(Entity):
 
