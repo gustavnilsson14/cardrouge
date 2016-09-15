@@ -1,6 +1,7 @@
-import arcade, random
+import arcade, random, math
 from utilities import *
 from block import *
+from item import *
 from bisect import bisect_left
 
 class Map:
@@ -19,42 +20,30 @@ class Map:
 
     def create_map(self):
         grid = []
-        for x in range(0,10):
-            for z in range(0,10):
+        for x in range(0,15):
+            for z in range(0,15):
                 new_tile = Tile((x,z))
-                #for y in range(0,int(random.randint(0,34)/34)+1):
-                #    new_tile.add_entity(GroundBlock())
-
-                #Custom map for testing fade
                 new_tile.add_entity(GroundBlock(0))
-                #if int(random.randint(0,100)) < 20:
-                #    for y in range(1,2):
-                #        new_tile.add_entity(GroundBlock(y))
-                if int(random.randint(0,100)) < 20:
-                    for y in range(2,3):
-                        new_tile.add_entity(GroundBlock(y))
+                for neighbor_prospect in grid :
+                    x_diff = neighbor_prospect.pos[0] - new_tile.pos[0]
+                    z_diff = neighbor_prospect.pos[1] - new_tile.pos[1]
+                    if int(math.fabs(x_diff)) > 1 or int(math.fabs(z_diff)) > 1:
+                        continue
+                    neighbor_prospect.neighbors += [new_tile]
+                    new_tile.neighbors += [neighbor_prospect]
                 grid += [new_tile]
-        neighbors = [(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1),(1,0),(1,1),(0,1)]
-        for tile in grid:
-            tile_neighbors = []
-            for n in neighbors:
-                #TODO: This is not correct! only works for index 10-99
-                index = (tile.pos[1] + n[1])+((tile.pos[0] + n[0]) * 10)
-                if index > 0 and index < len(grid)-1:
-                    tile_neighbors += [grid[index]]
-            tile.neighbors = tile_neighbors
+        for y in range(0,10):
+            grid[50].add_entity(GroundBlock(y))
 
-        ramptiles = []
-        '''for tile in grid:
-            if len(tile.entities) == 1:
-                continue
-            ramptile = random.choice(tile.neighbors)
-            if len(ramptile.entities) != 1:
-                continue
-            ramptiles +=[ramptile]
+        grid[49].add_entity(WaterBlock(1))
+        grid[70].add_entity(RampBlock(1))
+        grid[75].add_entity(Card(1))
+        grid[71].add_entity(GroundBlock(1))
+        grid[72].add_entity(GroundBlock(1))
+        grid[72].add_entity(RampBlock(2))
+        grid[73].add_entity(GroundBlock(2))
+        grid[73].add_entity(GroundBlock(1))
 
-        for tile in ramptiles:
-            tile.add_entity(RampBlock())'''
         return grid
 
     def set_transparent(self, entity):
@@ -64,7 +53,7 @@ class Map:
             for block in tile.entities:
                 block.transparent = 1
 
-        height = entity.tile.entities.index(entity)
+        height = entity.y
         tile = entity.tile
 
         # Get options
@@ -73,34 +62,36 @@ class Map:
         fade_distance = self.fade_option.get('fade_distance')
         fade_angle = self.fade_option.get('fade_angle')
         fade_from_block = self.fade_option.get('fade_from_block')
-
+'''
         #Do da thing!
         for tile_distance in range(0, fade_distance):
             # Make block transparent in an angle to camera.
             height_to_distance = height + int( tile_distance * fade_angle ) + fade_from_block
             # Make closes neighbors transparent.
+            for neighbor in tile.neighbors:
+                if neighbor
             for neighbor_index in range(0, 3):
                 # Get get number of enities (height) of neighbor tile.
                 entities_on_neighbor = len( tile.neighbors[neighbor_index].entities )
+                tile.neighbors[neighbor_index].get_entity_at(height_to_distance)
+
                 if height_to_distance < entities_on_neighbor:
                     for block_index in range( height_to_distance, entities_on_neighbor ):
                         # Calculate new alpha depending on height between player and block.
                         new_alpha = alpha + (alpha_to_distance * ( height_to_distance - block_index ))
                         tile.neighbors[neighbor_index].entities[block_index].transparent = new_alpha
-
-
-            tile = tile.neighbors[0]
+            tile = tile.neighbors[0]'''
 
 class Tile:
 
     def __init__(self,pos):
         self.pos = pos
         self.entities = []
-        self.neighbors = 0
+        self.neighbors = []
 
     def add_entity(self,entity):
         self.entities += [entity]
-        self.entities.sort(key = lambda new_entity: new_entity.y)
+        self.entities.sort(key = lambda new_entity: (new_entity.y,new_entity.draw_priority))
 
     def get_entity_below(self,entity):
         index = self.entities.index(entity) -1
@@ -110,17 +101,14 @@ class Tile:
 
     def get_entity_at(self,y):
         pos = Search.binary_search(self.entities,y)
+        if pos == None:
+            return None
         return self.entities[pos]
 
     def get_neighbor(self,vector):
         for neighbor in self.neighbors:
             if neighbor.pos[0] == self.pos[0] + vector[0] and neighbor.pos[1] == self.pos[1] + vector[1]:
                 return neighbor
-
-    def get_entity_at(self,height):
-        if len(self.entities) > height:
-            return self.entities[height]
-        return None
 
     def to_iso(self):
         x = self.pos[0] - self.pos[1]
@@ -140,6 +128,7 @@ class Camera:
         Camera.zoom = 1
         Camera.offset = offset
         Camera.offset_y = 0
+        Camera.clip_y = 0
 
     @staticmethod
     def move(vector = (0,0)):
@@ -154,7 +143,8 @@ class Camera:
         return {
             'zoom':Camera.zoom,
             'offset':Camera.to_iso(),
-            'offset_y':Camera.offset_y
+            'offset_y':Camera.offset_y,
+            'clip_y':Camera.clip_y
         }
 
     @staticmethod

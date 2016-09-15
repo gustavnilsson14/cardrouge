@@ -12,6 +12,9 @@ class GroundUnit(Unit):
             return 0
         self.fall_speed = 0
         Unit.move(self,vector)
+        if not self.has_footing():
+            self.y -= 1
+            return 0
         return 1
 
     def has_footing(self):

@@ -27,6 +27,7 @@ class WindowHandler(arcade.Window,JoinableObject):
         self.zoom = data.get('zoom')
         self.offset = data.get('offset')
         self.offset_y = data.get('offset_y')
+        self.clip_y = data.get('clip_y')
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -51,9 +52,11 @@ class WindowHandler(arcade.Window,JoinableObject):
                 y = entity.y - self.offset_y
                 z = raw_z + self.defaults.get('scaling')*(entity.height*y) + entity.offset_height + offset_next_height;
                 offset_next_height = entity.offset_next_height
-
+                if self.clip_y + self.offset_y < entity.y:
+                    continue
+                if self.clip_y + self.offset_y == entity.y and entity.image == 'res/sprites/blocks/cliffgrass.png':
+                    entity.image = 'res/sprites/blocks/cliffwall.png'
                 entity_sprite = arcade.Sprite(entity.image, self.defaults.get('scaling'))
-                entity_sprite.alpha = entity.transparent
                 entity_sprite.center_x = x
                 entity_sprite.center_y = z
                 self.all_sprites_list.append(entity_sprite)

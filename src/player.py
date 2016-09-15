@@ -32,9 +32,14 @@ class Player:
                 self.move_entity((0,1))
             elif key == arcade.key.RIGHT:
                 self.move_entity((0,-1))
+            elif key == arcade.key.X:
+                Camera.clip_y += 1
+            elif key == arcade.key.Z:
+                Camera.clip_y -= 1
 
     def move_entity(self,vector):
         self.controllable_entity.move(vector)
+        fov = self.controllable_entity.get_fov()
         self.set_camera()
 
     def set_camera(self):

@@ -1,3 +1,5 @@
+from bisect import bisect_left
+
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -31,6 +33,14 @@ class IsoConvertableObject:
 class Search:
 
     def binary_search(a, x, lo=0, hi=None):   # can't use a to specify default for hi
+        for index,entity in enumerate(a):
+            if entity.y == x:
+                return index
+        return None
+        #TODO: magic sparkles
+        '''
         hi = hi if hi is not None else len(a) # hi defaults to len(a)
+        print(a,x,lo,hi)
         pos = bisect_left(a,x,lo,hi)          # find insertion position
         return (pos if pos != hi and a[pos] == x else -1) # don't walk off the end
+        '''

@@ -15,6 +15,8 @@ from game import *
 from windowhandler import WindowHandler
 from message import *
 
+sys.setrecursionlimit(15000*3)
+
 if __name__ == '__main__':
 
     defaults = {
