@@ -48,7 +48,7 @@ class Player:
         #print(len(self.controllable_entity.tile.entities))
         self.set_camera()
         print(self.controllable_entity.y, self.controllable_entity.tile.pos )
-        self.game_map.raycast(self.game_map.grid[0], 1, self.controllable_entity.tile, self.controllable_entity.y )
+        #self.game_map.raycast(self.game_map.grid[0], 1, self.controllable_entity.tile, self.controllable_entity.y )
 
         return 1
 
