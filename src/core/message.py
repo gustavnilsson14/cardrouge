@@ -1,10 +1,10 @@
 from log import Log
-import json,inspect,sys
+import json,inspect,sys, time
 from multiprocessing import Process, Queue
 
 class JoinableObject(Log):
 
-    JOIN_LIMIT = 100
+    JOIN_LIMIT = 10
 
     method_index = {}
 
@@ -27,6 +27,11 @@ class JoinableObject(Log):
         method = self.__class__.method_index.get(index)
         getattr(self,method)(data)
 
+    def wait_join(self):
+        while self.queues.get('input').empty():
+            time.sleep(0.05)
+        self.join()
+
     def join(self):
         joined_data = 0
         while not self.queues.get('input').empty() and joined_data < JoinableObject.JOIN_LIMIT:
@@ -40,6 +45,7 @@ class JoinableObject(Log):
             self.run_method_by_index(message.method,message.data)
         if joined_data == JoinableObject.JOIN_LIMIT:
             print("FUUUUU")
+        #print(self.__class__,joined_data)
         return joined_data
 
     def run(self,method,data):

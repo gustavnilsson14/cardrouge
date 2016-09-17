@@ -1,4 +1,5 @@
 import random, math
+from scene import *
 
 class Region:
 
@@ -54,6 +55,8 @@ class Area:
     INDEX_HEIGHT = 2
     INDEX_FEATURE = 3
 
+    AREA_SIDE = 32
+
     def __init__(self,pos,region,subregion,region_center = 0,subregion_center = 0):
         self.pos = pos
         self.region = region
@@ -62,6 +65,8 @@ class Area:
         self.subregion_center = subregion_center
         self.stats = (region.temp, subregion.rain,subregion.height)
         self.type = ''
+        self.seed = random.random()
+        self.entry_point = (0,0)
 
     def smooth(self,neighbors):
         avg_temp = 0
@@ -107,6 +112,24 @@ class Area:
         if not self.region_center and not self.subregion_center:
             return 1
         return 0
+
+    def init_entry_point(self):
+        x = 0
+        z = 0
+        if self.pos[0] > 0:
+            x = Area.AREA_SIDE
+        if self.pos[1] > 0:
+            z = Area.AREA_SIDE
+        self.entry_point = (x,z)
+
+    def generate_grid(self,data):
+        grid = []
+        for x in range(0, Area.AREA_SIDE):
+            z_list = []
+            for z in range(0, Area.AREA_SIDE):
+                z_list += [Tile((x,z))]
+            grid += [z_list]
+
 
     def get_diff(self,value,avg):
         if value < avg:

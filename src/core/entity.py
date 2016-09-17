@@ -54,19 +54,22 @@ class Unit(Entity):
         return 0
 
     def get_fov(self,view_range = 5,tile = None):
-        fov = []
-        if tile == None:
-            tile = self.tile
-        view_range -= 1
-        if view_range <= 0:
-            return fov
-        for neighbor in tile.neighbors:
-            if neighbor in fov:
-                continue
-            fov += self.get_fov(view_range,neighbor)
-        fov += tile.neighbors
-        return fov
-
+        start = self.tile
+        open_list = [self.tile]
+        closed_list = []
+        while len(open_list) != 0:
+            current = open_list[0]
+            for neighbor in current.neighbors:
+                if neighbor in open_list or neighbor in closed_list:
+                    continue
+                diff = abs(neighbor.pos[0]-start.pos[0])
+                diff += abs(neighbor.pos[1]-start.pos[1])
+                if diff > view_range:
+                    continue
+                open_list += [neighbor]
+            closed_list += [current]
+            open_list.remove(current)
+        return closed_list
 
 class Prop(Entity):
 
@@ -78,4 +81,4 @@ class Item(Entity):
     def __init__(self,y):
         Entity.__init__(self,y)
         self.draw_priority = -1
-        self.image = "res/sprites/items/default.png"
+        self.image = "res/sprites/blocks/grass.png"
