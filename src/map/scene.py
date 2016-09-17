@@ -70,6 +70,7 @@ class Map:
                 return next_tile
                 break
 
+        return 0
 
 class Tile:
 
