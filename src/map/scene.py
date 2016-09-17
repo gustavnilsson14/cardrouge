@@ -128,8 +128,8 @@ class Map:
         next_tile = start_tile
         for i, pos in enumerate(result):
             for neighbor in next_tile.neighbors:
-                if neighbor.pos == pos:
-                    next_tile = neighbor
+                if self.grid[neighbor].pos == pos:
+                    next_tile = self.grid[neighbor]
                     #print ("Found neighbor: ", neighbor.pos, " | ", int(y1+(i * y_factor)))
                     break
             if next_tile.get_entity_at(int(y1+(i * y_factor))) and i != 0:
