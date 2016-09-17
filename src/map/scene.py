@@ -38,7 +38,7 @@ class Map:
 
         grid[49].add_entity(WaterBlock(1))
         grid[70].add_entity(RampBlock(1))
-        grid[75].add_entity(Card(1))
+        #grid[75].add_entity(Card(1))
         grid[71].add_entity(GroundBlock(1))
         grid[72].add_entity(GroundBlock(1))
         grid[72].add_entity(RampBlock(2))
@@ -47,41 +47,19 @@ class Map:
 
         return grid
 
-    def set_transparent(self, entity):
-        #TODO: Don't do this loop!
-        #      Create list of all previous transparent block and set them to non transparent?
-        for tile in self.grid:
-            for block in tile.entities:
-                block.transparent = 1
+    def raycast(self, start_tile, target_tile):
+        result = Raycast.cast(start_tile, target_tile)
+        print("doing raycast between point: ", start_tile.pos, " and ", target_tile.pos)
 
-        height = entity.y
-        tile = entity.tile
+        next_tile = start_tile
+        for pos in result:
+            for neighbor in next_tile.neighbors:
+                if neighbor.pos == pos:
+                    next_tile = neighbor
+                    print ("Found neighbor: ", neighbor.pos)
+                    break
 
-        # Get options
-        alpha = self.fade_option.get('alpha')
-        alpha_to_distance = self.fade_option.get('alpha_to_distance')
-        fade_distance = self.fade_option.get('fade_distance')
-        fade_angle = self.fade_option.get('fade_angle')
-        fade_from_block = self.fade_option.get('fade_from_block')
-'''
-        #Do da thing!
-        for tile_distance in range(0, fade_distance):
-            # Make block transparent in an angle to camera.
-            height_to_distance = height + int( tile_distance * fade_angle ) + fade_from_block
-            # Make closes neighbors transparent.
-            for neighbor in tile.neighbors:
-                if neighbor
-            for neighbor_index in range(0, 3):
-                # Get get number of enities (height) of neighbor tile.
-                entities_on_neighbor = len( tile.neighbors[neighbor_index].entities )
-                tile.neighbors[neighbor_index].get_entity_at(height_to_distance)
 
-                if height_to_distance < entities_on_neighbor:
-                    for block_index in range( height_to_distance, entities_on_neighbor ):
-                        # Calculate new alpha depending on height between player and block.
-                        new_alpha = alpha + (alpha_to_distance * ( height_to_distance - block_index ))
-                        tile.neighbors[neighbor_index].entities[block_index].transparent = new_alpha
-            tile = tile.neighbors[0]'''
 
 class Tile:
 

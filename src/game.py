@@ -7,13 +7,13 @@ from unit import *
 from scene import *
 from world import *
 import time
+from utilities import *
 
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
         Camera.initialize()
         JoinableObject.__init__(self,queues)
-
         self.mapgen_process = self.start_child_process(WorldGen)
         self.run(WorldGen.generate, {})
         self.wait_join()
@@ -31,6 +31,8 @@ class Game(JoinableObject):
         self.player.fov = self.player.controllable_entity.get_fov()
         self.map_sprite_list = test_map.grid
         self.player.set_camera()
+
+        test_map.raycast(test_map.grid[50], test_map.grid[87])
         while 1:
             for tile in self.player.fov:
                 tile.changed = 0

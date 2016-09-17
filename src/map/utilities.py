@@ -1,4 +1,5 @@
 from bisect import bisect_left
+import math
 
 class Point:
     def __init__(self, x=0, y=0):
@@ -44,3 +45,60 @@ class Search:
         pos = bisect_left(a,x,lo,hi)          # find insertion position
         return (pos if pos != hi and a[pos] == x else -1) # don't walk off the end
         '''
+
+class Raycast:
+
+    def cast(start, target):
+        raycast_line = Raycast.bresenhamLine(start.pos, target.pos)
+        return raycast_line
+
+
+    def is_traversable(target):
+        pass
+
+    def swap(a, b):
+        c = a;
+        a = b;
+        b = c;
+        return (a,b)
+
+    def bresenhamLine(start ,target):
+        result = []
+
+        x0 = start[0]
+        y0 = start[1]
+        x1 = target[0]
+        y1 = target[1]
+
+        steep = int(math.fabs(y1 - y0)) > int(math.fabs(x1 - x0))
+
+        if steep:
+            (x0, y0) = Raycast.swap(x0, y0)
+            (x1, y1) = Raycast.swap(x1, y1)
+
+        if x0 > x1:
+            (x0, x1) = Raycast.swap(x0, x1)
+            (y0, y1) = Raycast.swap(y0, y1)
+
+
+        deltax = x1 - x0
+        deltay = int(math.fabs(y1 - y0))
+        error = 0
+        y = y0
+        if y0 < y1:
+            ystep = 1
+        else:
+            ystep = -1
+
+        for x in range(x0, x1):
+            if steep:
+                result += [(y, x)]
+            else:
+                result += [(x, y)]
+            error += deltay
+            if 2 * error >= deltax:
+                y += ystep
+                error -= deltax
+
+
+        return result;
