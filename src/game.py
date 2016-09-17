@@ -30,9 +30,6 @@ class Game(JoinableObject):
 
     def start(self,package):
         test_map = package.get('map')
-        for tile in test_map:
-            print(len(tile.entities ))
-        print('sti',package.get('start_tile_index'))
         start_tile_index = package.get('start_tile_index')
         player_unit = TestUnit(30,test_map[start_tile_index])
         test_map[-1].add_entity(GroundBlock(9))
