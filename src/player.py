@@ -45,4 +45,4 @@ class Player:
     def set_camera(self):
         Camera.move_to(self.controllable_entity.tile.pos)
         Camera.offset_y = self.controllable_entity.y
-        self.game_map.set_transparent(self.controllable_entity)
+        #self.game_map.set_transparent(self.controllable_entity)

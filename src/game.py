@@ -6,13 +6,13 @@ from player import *
 from unit import *
 from scene import *
 import time
+from utilities import *
 
 class Game(JoinableObject):
 
     def __init__(self,queues,defaults):
         Camera.initialize()
         JoinableObject.__init__(self,queues)
-
         self.mapgen_process = self.start_child_process(WorldGen)
 
         test_map = Map(10,10)
@@ -21,6 +21,8 @@ class Game(JoinableObject):
         self.player = Player(player_unit, test_map)
         self.map_sprite_list = test_map.grid
         self.player.set_camera()
+
+        test_map.raycast(test_map.grid[50], test_map.grid[87])
         while 1:
             self.update()
             time.sleep(1/60)
