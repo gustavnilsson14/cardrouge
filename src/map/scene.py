@@ -62,7 +62,7 @@ class Map:
             for neighbor in next_tile.neighbors:
                 if neighbor.pos == pos:
                     next_tile = neighbor
-                    print ("Found neighbor: ", neighbor.pos, " | ", int(y1+(i * y_factor)))
+                    #print ("Found neighbor: ", neighbor.pos, " | ", int(y1+(i * y_factor)))
                     break
 
             if next_tile.get_entity_at(int(y1+(i * y_factor))) and i != 0:
