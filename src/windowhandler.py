@@ -19,11 +19,6 @@ class WindowHandler(arcade.Window,JoinableObject):
         # Sprite lists
         self.all_sprites_list = arcade.SpriteList()
 
-        # Set up the player
-        self.score = 0
-        self.player_sprite = None
-        self.wall_list = None
-        self.physics_engine = None
         self.setup()
 
     def move_camera(self,data):

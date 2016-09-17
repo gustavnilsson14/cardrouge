@@ -34,8 +34,8 @@ class Unit(Entity):
         self.tile.entities += [self]
         self.transparent = 1
 
-    def move(self,vector):
-        target = self.tile.get_neighbor(vector)
+    def move(self,game_map,vector):
+        target = self.tile.get_neighbor(game_map,vector)
         if not target:
             return 0
         if not self.can_move_to(target):
@@ -53,13 +53,14 @@ class Unit(Entity):
             return entity.move_into(self)
         return 0
 
-    def get_fov(self,view_range = 5,tile = None):
+    def get_fov(self,game_map,view_range = 7,tile = None):
         start = self.tile
         open_list = [self.tile]
         closed_list = []
         while len(open_list) != 0:
             current = open_list[0]
-            for neighbor in current.neighbors:
+            for n_pos in current.neighbors:
+                neighbor = game_map[n_pos]
                 if neighbor in open_list or neighbor in closed_list:
                     continue
                 diff = abs(neighbor.pos[0]-start.pos[0])

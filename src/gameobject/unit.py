@@ -6,12 +6,12 @@ class GroundUnit(Unit):
         Unit.__init__(self,y,tile)
         self.fall_speed = 0
 
-    def move(self,vector):
+    def move(self,game_map,vector):
         if not self.has_footing():
             self.y -= 1
             return 0
         self.fall_speed = 0
-        Unit.move(self,vector)
+        Unit.move(self,game_map,vector)
         if not self.has_footing():
             self.y -= 1
             return 0

@@ -7,6 +7,7 @@ class Player:
         self.keys_pressed = []
         self.controllable_entity = controllable_entity
         self.game_map = game_map
+        self.has_update = 1
         self.fov = []
 
     def key_press(self,data):
@@ -39,8 +40,9 @@ class Player:
                 Camera.clip_y -= 1
 
     def move_entity(self,vector):
-        self.controllable_entity.move(vector)
-        self.fov = self.controllable_entity.get_fov()
+        self.has_update = 1
+        self.controllable_entity.move(self.game_map,vector)
+        self.fov = self.controllable_entity.get_fov(self.game_map)
 
         self.fov.sort(key = lambda tile: (tile.pos[0],tile.pos[1]))
         print(len(self.controllable_entity.tile.entities))

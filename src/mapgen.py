@@ -88,7 +88,15 @@ class WorldGen(MapGen):
         random.shuffle(self.edge_areas)
         start_area = self.edge_areas[0]
         start_area.init_entry_point()
-        self.run(game.Game.start,start_area)
+        start_area.generate_overworld()
+        self.update_game_map(start_area,start_area.entry_point)
+
+    def update_game_map(self,area,start_tile_index):
+        package = {
+            'map': area.map.overworld,
+            'start_tile_index': 10
+        }
+        self.run(game.Game.start,package)
 
     def smooth_areas(self):
         neighbors = [(-1,-1),(-1,0),(-1,1),(1,-1),(1,0),(1,1),(0,-1),(0,1)]
