@@ -29,10 +29,10 @@ class Map:
         return abs(area.stats[world.Area.INDEX_HEIGHT] - 95) / 20
 
     def get_random_size_rect(self,x,z,base_size):
-        diff = base_size * 0.25
-        diff_offset = base_size * 0.5
+        diff = base_size * 0.50
+        diff_offset = base_size * 1
         max_x = int(x+base_size + (random.random() * diff) - diff_offset)
-        max_z = int(x+base_size + (random.random() * diff) - diff_offset)
+        max_z = int(z+base_size + (random.random() * diff) - diff_offset)
         x += int((random.random() * diff) - diff_offset)
         z += int((random.random() * diff) - diff_offset)
         return (x,z,max_x,max_z)
@@ -65,14 +65,11 @@ class Map:
                 z_list += [new_tile]
         sub_area_side = self.get_sub_area_side(area)
         rect_base_size = self.rect_base_size(area)
-        print('height:',area.stats[world.Area.INDEX_HEIGHT],'sub_area_side:',sub_area_side,)
-        print('-'*50)
         side_max = int(world.Area.AREA_SIDE/sub_area_side)
         for x in range(0,sub_area_side):
             for z in range(0,sub_area_side):
                 rect = self.get_random_size_rect(x * side_max,z * side_max,rect_base_size)
-                #print(rect)
-                height = range(15,16+self.get_random_height(area))
+                height = range(16,16+self.get_random_height(area))
                 for tile_x in range(rect[0],rect[2]):
                     for tile_z in range(rect[1],rect[3]):
                         for y in height:
@@ -179,19 +176,7 @@ class Tile:
     def get_neighbor(self,game_map,vector):
         for n_pos in self.neighbors:
             neighbor = game_map[n_pos]
-            print(vector,self.pos,neighbor.pos)
             if neighbor.pos == (self.pos[0] + vector[0],self.pos[1] + vector[1],):
-                print("RETURN")
-                return neighbor
-        return None
-        print(vector,self.pos,len(self.neighbors))
-        for neighbor in self.neighbors:
-            print(neighbor.pos)
-        print('-'*10)
-        for neighbor in self.neighbors:
-            if neighbor.pos[0] == self.pos[0] + vector[0] and neighbor.pos[1] == self.pos[1] + vector[1]:
-                print(neighbor.pos)
-                print('-'*30)
                 return neighbor
         return None
 
