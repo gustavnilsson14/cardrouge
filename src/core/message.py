@@ -1,10 +1,10 @@
 from log import Log
-import json,inspect,sys, time
+import json,inspect,sys, time,pickle
 from multiprocessing import Process, Queue
 
 class JoinableObject(Log):
 
-    JOIN_LIMIT = 10
+    JOIN_LIMIT = 100
 
     method_index = {}
 
@@ -43,9 +43,11 @@ class JoinableObject(Log):
                 self.terminate()
                 return
             self.run_method_by_index(message.method,message.data)
+        if joined_data > 0:
+            #self.log('joined_data '+str(joined_data),logtype = 'ERROR')
+            pass
         if joined_data == JoinableObject.JOIN_LIMIT:
-            print("FUUUUU")
-        #print(self.__class__,joined_data)
+            self.log('joined_data exceeding limit',logtype = 'ERROR')
         return joined_data
 
     def run(self,method,data):

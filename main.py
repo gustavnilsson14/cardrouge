@@ -15,7 +15,29 @@ from game import *
 from windowhandler import WindowHandler
 from message import *
 
-sys.setrecursionlimit(15000*3)
+sys.setrecursionlimit(1500000)
+
+
+li =[]
+di = {}
+st = time.time()
+for v in range(0,100000):
+    li += [v]
+    di[v] = v
+print('gen took: %s seconds'%(str(time.time()-st),))
+
+st = time.time()
+for v in li:
+    if v == 100000:
+        break
+
+print('li took: %s seconds'%(str(time.time()-st),))
+
+st = time.time()
+for i in range(0,100000):
+    di.get(v)
+print('di took: %s seconds'%(str(time.time()-st),))
+#exit()
 
 if __name__ == '__main__':
 
