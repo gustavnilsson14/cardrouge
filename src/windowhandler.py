@@ -1,6 +1,7 @@
-import arcade, time
+import arcade, time, arcade.window_commands
 from message import JoinableObject
 import game
+from utilities import *
 
 class WindowHandler(arcade.Window,JoinableObject):
     """ Main application class. """
@@ -10,6 +11,8 @@ class WindowHandler(arcade.Window,JoinableObject):
         self.zoom = 1
         self.defaults = defaults
         self.game_process = game_process
+        self.tiles = []
+        self.tile_ids = []
         super().__init__(self.defaults.get('width'), self.defaults.get('height'))
         JoinableObject.__init__(self,queues)
 
@@ -39,10 +42,25 @@ class WindowHandler(arcade.Window,JoinableObject):
 
         arcade.set_background_color((0,0,0))
 
-    def add_sprites(self,data):
-        for sprite in self.all_sprites_list:
-            self.all_sprites_list.remove(sprite)
+    def get_tile_index(self,tile):
+        #TODO: CHANGE TO B SEARCH
+        if tile.id in self.tile_ids:
+            return self.tile_ids.index(tile.id)
+        return None
 
+    def add_to_tiles(self,tile):
+        self.tile_ids += [tile.id]
+        self.tiles += [tile]
+        return 0
+
+    def tile_changed(self,tile,fov):
+        if tile.changed:
+            print(tile.changed)
+            return 1
+        return 0
+
+    def add_sprites(self,data):
+        self.remove_sprites()
         data = reversed(data)
         for tile in data:
             scaling = self.defaults.get('tile_size')*self.defaults.get('scaling')
@@ -63,8 +81,9 @@ class WindowHandler(arcade.Window,JoinableObject):
                 entity_sprite.center_y = z
                 self.all_sprites_list.append(entity_sprite)
 
-    def remove_sprites(self,data):
-        pass
+    def remove_sprites(self):
+        while len(self.all_sprites_list) != 0:
+            self.all_sprites_list.remove(self.all_sprites_list[0])
 
     def add_text(self,data):
         pass
@@ -72,8 +91,8 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def on_draw(self):
         arcade.start_render()
-        self.all_sprites_list.draw()
         self.join()
+        self.all_sprites_list.draw()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:

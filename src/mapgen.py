@@ -34,10 +34,10 @@ class WorldGen(MapGen):
     SMOOTH_PASSES = 4
 
     def __init__(self,queues):
-        return
         self.regions = []
         self.subregions = []
         self.areas = []
+        self.edge_areas = None
         self.world_outlined = 0
         MapGen.__init__(self,queues)
 
@@ -84,10 +84,11 @@ class WorldGen(MapGen):
                 debug_string += area.get_debug()
             print(debug_string)
             print('')
-
-        edge_areas = self.get_edge_areas(max_side)
-        random.shuffle(edge_areas)
-        print(edge_areas[0].pos,edge_areas[0].type)
+        self.edge_areas = self.get_edge_areas(max_side)
+        random.shuffle(self.edge_areas)
+        start_area = self.edge_areas[0]
+        start_area.init_entry_point()
+        self.run(game.Game.start,start_area)
 
     def smooth_areas(self):
         neighbors = [(-1,-1),(-1,0),(-1,1),(1,-1),(1,0),(1,1),(0,-1),(0,1)]
@@ -113,6 +114,9 @@ class WorldGen(MapGen):
                 y_list += [region_types[region_n % len(region_types)]()]
             regions += [y_list]
         return regions
+
+    def get_area_at(self,pos):
+        pass
 
     def get_edge_areas(self,max_side):
         edge_areas = []

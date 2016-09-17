@@ -3,6 +3,7 @@ from utilities import *
 from block import *
 from item import *
 from bisect import bisect_left
+import uuid
 
 class Map:
 
@@ -85,13 +86,27 @@ class Map:
 class Tile:
 
     def __init__(self,pos):
+        self.id = str(uuid.uuid4())
         self.pos = pos
         self.entities = []
         self.neighbors = []
+        self.sprites = []
+        self.changed = 1
 
     def add_entity(self,entity):
+        if entity in self.entities:
+            return 0
         self.entities += [entity]
         self.entities.sort(key = lambda new_entity: (new_entity.y,new_entity.draw_priority))
+        self.changed = 1
+        return 1
+
+    def remove_entity(self,entity):
+        if entity not in self.entities:
+            return 0
+        self.entities.remove(entity)
+        self.changed = 1
+        return 1
 
     def get_entity_below(self,entity):
         index = self.entities.index(entity) -1

@@ -5,6 +5,7 @@ from mapgen import SceneGen, WorldGen
 from player import *
 from unit import *
 from scene import *
+from world import *
 import time
 
 class Game(JoinableObject):
@@ -14,21 +15,27 @@ class Game(JoinableObject):
         JoinableObject.__init__(self,queues)
 
         self.mapgen_process = self.start_child_process(WorldGen)
-
-        test_map = Map(10,10)
-        player_unit = TestUnit(10,test_map.grid[-1])
-        test_map.grid[-1].add_entity(GroundBlock(9))
-        self.player = Player(player_unit, test_map)
-        self.map_sprite_list = test_map.grid
-        self.player.set_camera()
-        while 1:
-            self.update()
-            time.sleep(1/60)
+        self.run(WorldGen.generate, {})
+        self.wait_join()
 
     def update(self):
         self.join()
         self.run(WindowHandler.move_camera, Camera.get_object())
-        self.run(WindowHandler.add_sprites, self.map_sprite_list)
+        self.run(WindowHandler.add_sprites, self.player.fov)
+
+    def start(self,area):
+        test_map = Map(10,10)
+        player_unit = TestUnit(10,test_map.grid[-1])
+        test_map.grid[-1].add_entity(GroundBlock(9))
+        self.player = Player(player_unit, test_map)
+        self.player.fov = self.player.controllable_entity.get_fov()
+        self.map_sprite_list = test_map.grid
+        self.player.set_camera()
+        while 1:
+            for tile in self.player.fov:
+                tile.changed = 0
+            self.update()
+            time.sleep(1/40)
 
     def key_press(self,data):
         self.player.key_press(data)
