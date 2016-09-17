@@ -32,7 +32,6 @@ class Game(JoinableObject):
         self.map_sprite_list = test_map.grid
         self.player.set_camera()
 
-        test_map.raycast(test_map.grid[50], test_map.grid[87])
         while 1:
             for tile in self.player.fov:
                 tile.changed = 0

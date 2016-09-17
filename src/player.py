@@ -43,8 +43,11 @@ class Player:
         self.fov = self.controllable_entity.get_fov()
 
         self.fov.sort(key = lambda tile: (tile.pos[0],tile.pos[1]))
-        print(len(self.controllable_entity.tile.entities))
+        #print(len(self.controllable_entity.tile.entities))
         self.set_camera()
+        print(self.controllable_entity.y, self.controllable_entity.tile.pos )
+        self.game_map.raycast(self.game_map.grid[0], 1, self.controllable_entity.tile, self.controllable_entity.y )
+
         return 1
 
     def set_camera(self):

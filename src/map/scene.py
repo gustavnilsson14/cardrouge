@@ -47,20 +47,28 @@ class Map:
 
         return grid
 
-    def raycast(self, start_tile, target_tile):
+    def raycast(self, start_tile, y1, target_tile, y2):
+
+        if start_tile.pos == target_tile.pos:
+            print("Can't raycast on same tile")
+            return
+
         result = Raycast.cast(start_tile, target_tile)
         print("doing raycast between point: ", start_tile.pos, " and ", target_tile.pos )
 
+        y_factor = (y2-y1)/len(result)
         next_tile = start_tile
-        for pos in result:
+        for i, pos in enumerate(result):
             for neighbor in next_tile.neighbors:
                 if neighbor.pos == pos:
                     next_tile = neighbor
-                    print ("Found neighbor: ", neighbor.pos)
+                    print ("Found neighbor: ", neighbor.pos, " | ", int(y1+(i * y_factor)))
                     break
 
-            if next_tile.get_entity_at(0):
-                print("block found at this pos")
+            if next_tile.get_entity_at(int(y1+(i * y_factor))) and i != 0:
+                print("block found at this pos", next_tile.pos, int(y1+ (i * y_factor)))
+                return next_tile
+                break
 
 
 class Tile:
