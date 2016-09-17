@@ -50,7 +50,7 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def tile_changed(self,tile,fov):
         if tile.changed:
-            print(tile.changed)
+            #print(tile.changed)
             return 1
         return 0
 
