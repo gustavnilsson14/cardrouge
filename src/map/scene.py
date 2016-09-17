@@ -48,7 +48,7 @@ class Map:
 
     def raycast(self, start_tile, target_tile):
         result = Raycast.cast(start_tile, target_tile)
-        print("doing raycast between point: ", start_tile.pos, " and ", target_tile.pos)
+        print("doing raycast between point: ", start_tile.pos, " and ", target_tile.pos )
 
         next_tile = start_tile
         for pos in result:
@@ -58,6 +58,8 @@ class Map:
                     print ("Found neighbor: ", neighbor.pos)
                     break
 
+            if next_tile.get_entity_at(0):
+                print("block found at this pos")
 
 
 class Tile:
