@@ -13,5 +13,4 @@ class Npc(Controllable):
         for entity in self.controllable_entities:
             x = random.randint(-1, 1)
             z = random.randint(-1, 1)
-            print(x,z)
             entity.move(self.game_map, (x,z))

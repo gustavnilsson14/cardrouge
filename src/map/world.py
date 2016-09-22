@@ -55,7 +55,7 @@ class Area:
     INDEX_HEIGHT = 2
     INDEX_FEATURE = 3
 
-    AREA_SIDE = 128
+    AREA_SIDE = 32
 
     def __init__(self,pos,region,subregion,region_center = 0,subregion_center = 0):
         self.pos = pos

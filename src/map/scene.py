@@ -68,6 +68,7 @@ class Map:
     def create_overworld(self,area):
         grid = self.create_tile_grid()
         area_height = int(area.height()/10)
+        area_height = 3
         overworld = []
         for x in range(0,world.Area.AREA_SIDE):
             for z in range(0,world.Area.AREA_SIDE):
@@ -76,7 +77,7 @@ class Map:
                 grid[x][z].noise = height
 
         for pa in range(0,int(abs(area_height-16)/2)):
-            if pa == 4:
+            if pa == 6:
                 break
             for x in range(0,world.Area.AREA_SIDE):
                 for z in range(0,world.Area.AREA_SIDE):
@@ -91,7 +92,7 @@ class Map:
                     grid[x][z].noise = int(height / ns)
         for z_list in grid:
             for tile in z_list:
-                for y in range(tile.noise-2,tile.noise):
+                for y in range(tile.noise-4,tile.noise):
                     tile.add_entity(GroundBlock(y))
                 overworld += [tile]
         overworld = self.create_ramps(overworld)

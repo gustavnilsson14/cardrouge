@@ -33,7 +33,7 @@ class Game(JoinableObject):
         d = 0
         start_tile_index = package.get('start_tile_index')
         print("-"*50)
-        print(test_map[start_tile_index].entities)
+        print(test_map[-1].entities)
         player_unit = TestUnit(30,test_map[start_tile_index-1])
         player_unit = TestUnit(30,test_map[start_tile_index])
         print(test_map[start_tile_index].entities)
