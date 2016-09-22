@@ -8,6 +8,7 @@ from scene import *
 from world import *
 import time
 from utilities import *
+from npc import *
 
 class Game(JoinableObject):
 
@@ -23,6 +24,7 @@ class Game(JoinableObject):
         self.join()
         self.run(WindowHandler.move_camera, Camera.get_object())
         if self.player.has_update:
+            self.npc.update()
             st = time.time()
             self.run(WindowHandler.add_sprites, self.player.fov)
             print('game WindowHandler.add_sprites took: %s seconds'%(str(time.time()-st),))
@@ -34,10 +36,13 @@ class Game(JoinableObject):
         player_unit = TestUnit(30,test_map[start_tile_index])
         test_map[-1].add_entity(GroundBlock(9))
         self.player = Player(player_unit, test_map)
-        self.player.fov = self.player.controllable_entity.get_fov(test_map)
+        self.player.fov = self.player.controllable_entities[0].get_fov(test_map)
+        self.npc = Npc(test_map)
         self.map_sprite_list = test_map
         self.player.set_camera()
         self.player.has_update = 1
+
+
 
         #test_map.raycast(test_map.tiles[50], test_map.tiles[87])
         while 1:
