@@ -47,7 +47,7 @@ class SubRegion:
         self.rain = (seed[0]*40) + random.randint(0,20)
         self.height = (seed[1]*40) + random.randint(0,20)
 
-class Area():
+class Area:
 
     OCEAN_LEVEL = 50
     INDEX_TEMP = 0
@@ -67,7 +67,6 @@ class Area():
         self.type = ''
         self.seed = random.random()
         self.entry_point = (0,0)
-        self.map = None
 
     def smooth(self,neighbors):
         avg_temp = 0
@@ -118,13 +117,19 @@ class Area():
         x = 0
         z = 0
         if self.pos[0] > 0:
-            x = Area.AREA_SIDE-1
+            x = Area.AREA_SIDE
         if self.pos[1] > 0:
-            z = Area.AREA_SIDE-1
+            z = Area.AREA_SIDE
         self.entry_point = (x,z)
 
-    def generate_overworld(self):
-        self.map = Map(self)
+    def generate_grid(self,data):
+        grid = []
+        for x in range(0, Area.AREA_SIDE):
+            z_list = []
+            for z in range(0, Area.AREA_SIDE):
+                z_list += [Tile((x,z))]
+            grid += [z_list]
+
 
     def get_diff(self,value,avg):
         if value < avg:

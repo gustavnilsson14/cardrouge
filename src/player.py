@@ -42,13 +42,15 @@ class Player:
     def move_entity(self,vector):
         self.has_update = 1
         self.controllable_entity.move(self.game_map,vector)
+        tile = self.controllable_entity.tile
         self.fov = self.controllable_entity.get_fov(self.game_map)
 
         self.fov.sort(key = lambda tile: (tile.pos[0],tile.pos[1]))
         #print(len(self.controllable_entity.tile.entities))
         self.set_camera()
         print(self.controllable_entity.y, self.controllable_entity.tile.pos )
-        #self.game_map.raycast(self.game_map.grid[0], 1, self.controllable_entity.tile, self.controllable_entity.y )
+
+        tile.raycast(self.game_map, self.controllable_entity.y, self.game_map[0], 1,)
 
         return 1
 

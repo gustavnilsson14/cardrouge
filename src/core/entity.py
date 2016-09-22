@@ -53,7 +53,7 @@ class Unit(Entity):
             return entity.move_into(self)
         return 0
 
-    def get_fov(self,game_map,view_range = 7,tile = None):
+    def get_fov(self,game_map,view_range = 15,tile = None):
         start = self.tile
         open_list = [self.tile]
         closed_list = []

@@ -112,29 +112,7 @@ class Map:
 
         return grid
 
-    def raycast(self, start_tile, y1, target_tile, y2):
 
-        if start_tile.pos == target_tile.pos:
-            print("Can't raycast on same tile")
-            return
-
-        result = Raycast.cast(start_tile, target_tile)
-        print("doing raycast between point: ", start_tile.pos, " and ", target_tile.pos )
-
-        y_factor = (y2-y1)/len(result)
-        next_tile = start_tile
-        for i, pos in enumerate(result):
-            for neighbor in next_tile.neighbors:
-                if self.grid[neighbor].pos == pos:
-                    next_tile = self.grid[neighbor]
-                    #print ("Found neighbor: ", neighbor.pos, " | ", int(y1+(i * y_factor)))
-                    break
-            if next_tile.get_entity_at(int(y1+(i * y_factor))) and i != 0:
-                print("block found at this pos", next_tile.pos, int(y1+ (i * y_factor)))
-                return next_tile
-                break
-
-        return 0
 
 class Tile:
 
@@ -184,6 +162,27 @@ class Tile:
         x = self.pos[0] - self.pos[1]
         z = (self.pos[0] + self.pos[1]) / 2
         return (x,z)
+
+    def raycast(self, game_map, y1, target_tile, y2):
+
+        if self.pos == target_tile.pos:
+            print("Can't raycast on same tile")
+            return
+
+        result = Raycast.cast(self, target_tile)
+        print("doing raycast between point: ", self.pos, " and ", target_tile.pos )
+
+        y_factor = (y2-y1)/len(result)
+        next_tile = self
+        for i, pos in enumerate(result):
+            for neighbor in next_tile.neighbors:
+                if game_map[neighbor].pos == pos:
+                    next_tile = game_map[neighbor]
+                    break
+            if next_tile.get_entity_at(int(y1+(i * y_factor))) and i != 0:
+                return next_tile
+
+        return 0
 
 class Voxel:
 
