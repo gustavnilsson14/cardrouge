@@ -67,6 +67,7 @@ class Area:
         self.type = ''
         self.seed = random.random()
         self.entry_point = (0,0)
+        self.map = None
 
     def smooth(self,neighbors):
         avg_temp = 0
@@ -130,6 +131,8 @@ class Area:
                 z_list += [Tile((x,z))]
             grid += [z_list]
 
+    def generate_overworld(self):
+        self.map = Map(self)
 
     def get_diff(self,value,avg):
         if value < avg:
@@ -151,6 +154,15 @@ class Area:
         for i in range(len(char),padding):
             new_char = new_char + '.'
         return new_char
+
+    def height(self):
+        return self.stats[INDEX_HEIGHT]
+
+    def rain(self):
+        return self.stats[INDEX_RAIN]
+
+    def temp(self):
+        return self.stats[INDEX_TEMP]
 
 class AreaFeatures:
 

@@ -41,6 +41,42 @@ class Map:
         return int(random.random() * (area.stats[world.Area.INDEX_HEIGHT]/10))
 
     def create_overworld(self,area):
+        '''
+        grid = []
+        area_side = world.Area.AREA_SIDE
+        reduced_area_side = int(world.Area.AREA_SIDE/2)
+        area_height = int(area.height()/10)
+        for x in range(0,reduced_area_side):
+            z_list = []
+            grid += [z_list]
+            for z in range(0,reduced_area_side):
+                y = random.random()
+                height = float(noise.pnoise3(x,z,y,octaves=1,persistence=0.9))*area_height*12
+                new_tile = Tile((x,z))
+                new_tile.noise = height
+                z_list += [new_tile]
+
+        for pa in range(0,int(abs(area_height-16)/2)):
+            if pa == 4:
+                break
+            for x in range(0,reduced_area_side):
+                d_string = ''
+                for z in range(0,reduced_area_side):
+                    ns = 1
+                    height = grid[x][z].noise
+                    for n_pos in [(1,0),(0,1),(-1,0),(0,-1),  (1,1),(-1,1),(-1,-1),(1,-1)]:
+                        try:
+                            ns +=1
+                            height += grid[x+n_pos[0]][z+n_pos[1]].noise
+                        except IndexError as e:
+                            pass
+                    grid[x][z].noise = int(height / ns)
+        for x, z_list in enumerate(grid):
+            for z, tile in enumerate(z_list):
+                for y in range(5,5+)
+                grid[x][z].add
+
+            '''
         self.overworld = []
         neighbors = [(1,0),(-1,0),(0,1),(0,-1),
                      (1,1),(1,-1),(-1,1),(-1,-1)]
