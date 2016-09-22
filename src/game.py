@@ -23,16 +23,19 @@ class Game(JoinableObject):
         self.join()
         self.run(WindowHandler.move_camera, Camera.get_object())
         if self.player.has_update:
-            st = time.time()
             self.run(WindowHandler.add_sprites, self.player.fov)
-            print('game WindowHandler.add_sprites took: %s seconds'%(str(time.time()-st),))
             self.player.has_update = 0
 
     def start(self,package):
         test_map = package.get('map')
+        d = 0
         start_tile_index = package.get('start_tile_index')
+        print("-"*50)
+        print(test_map[start_tile_index].entities)
+        player_unit = TestUnit(30,test_map[start_tile_index-1])
         player_unit = TestUnit(30,test_map[start_tile_index])
-        test_map[-1].add_entity(GroundBlock(9))
+        print(test_map[start_tile_index].entities)
+        print("-"*50)
         self.player = Player(player_unit, test_map)
         self.player.fov = self.player.controllable_entity.get_fov(test_map)
         self.map_sprite_list = test_map
@@ -46,9 +49,7 @@ class Game(JoinableObject):
 
     def key_press(self,data):
         if self.player:
-            st = time.time()
             self.player.key_press(data)
-            print('game key_press took: %s seconds'%(str(time.time()-st),))
 
     def key_release(self,data):
         if self.player:

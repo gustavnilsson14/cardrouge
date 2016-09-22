@@ -29,7 +29,7 @@ class RampBlock(SolidBlock):
         self.image = "res/sprites/blocks/clifframp.png"
 
     def move_into(self,target):
-        target.y += self.y
+        target.y += 1
         return 1
 
 class WaterBlock(HollowBlock):

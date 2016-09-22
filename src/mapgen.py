@@ -91,10 +91,11 @@ class WorldGen(MapGen):
         start_area.generate_overworld()
         self.update_game_map(start_area,start_area.entry_point)
 
-    def update_game_map(self,area,start_tile_index):
+    def update_game_map(self,area,entry_point):
+        print(area.map.overworld[0].entities)
         package = {
             'map': area.map.overworld,
-            'start_tile_index': 10
+            'start_tile_index': entry_point[0]*Area.AREA_SIDE+entry_point[1]
         }
         self.run(game.Game.start,package)
 

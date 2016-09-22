@@ -55,7 +55,7 @@ class Area:
     INDEX_HEIGHT = 2
     INDEX_FEATURE = 3
 
-    AREA_SIDE = 32
+    AREA_SIDE = 128
 
     def __init__(self,pos,region,subregion,region_center = 0,subregion_center = 0):
         self.pos = pos
@@ -118,9 +118,9 @@ class Area:
         x = 0
         z = 0
         if self.pos[0] > 0:
-            x = Area.AREA_SIDE
+            x = Area.AREA_SIDE -1
         if self.pos[1] > 0:
-            z = Area.AREA_SIDE
+            z = Area.AREA_SIDE -1
         self.entry_point = (x,z)
 
     def generate_grid(self,data):
@@ -156,13 +156,13 @@ class Area:
         return new_char
 
     def height(self):
-        return self.stats[INDEX_HEIGHT]
+        return self.stats[Area.INDEX_HEIGHT]
 
     def rain(self):
-        return self.stats[INDEX_RAIN]
+        return self.stats[Area.INDEX_RAIN]
 
     def temp(self):
-        return self.stats[INDEX_TEMP]
+        return self.stats[Area.INDEX_TEMP]
 
 class AreaFeatures:
 

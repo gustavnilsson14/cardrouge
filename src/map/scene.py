@@ -1,4 +1,4 @@
-import arcade, random, math,time
+import arcade, random, math,time,noise
 from utilities import *
 from block import *
 from item import *
@@ -18,66 +18,16 @@ class Map:
     }
 
     def __init__(self,area):
-        self.overworld = []
         self.sub_area_size = int(world.Area.AREA_SIDE / 40)
-        self.create_overworld(area)
+        self.overworld = self.create_overworld(area)
 
-    def get_sub_area_side(self,area):
-        return int(world.Area.AREA_SIDE/self.rect_base_size(area))
+    def pad_debug_char(self,char,padding):
+        new_char = char
+        for i in range(len(char),padding):
+            new_char = new_char + '.'
+        return new_char
 
-    def rect_base_size(self,area):
-        return abs(area.stats[world.Area.INDEX_HEIGHT] - 95) / 20
-
-    def get_random_size_rect(self,x,z,base_size):
-        diff = base_size * 0.50
-        diff_offset = base_size * 1
-        max_x = int(x+base_size + (random.random() * diff) - diff_offset)
-        max_z = int(z+base_size + (random.random() * diff) - diff_offset)
-        x += int((random.random() * diff) - diff_offset)
-        z += int((random.random() * diff) - diff_offset)
-        return (x,z,max_x,max_z)
-
-    def get_random_height(self,area):
-        return int(random.random() * (area.stats[world.Area.INDEX_HEIGHT]/10))
-
-    def create_overworld(self,area):
-        '''
-        grid = []
-        area_side = world.Area.AREA_SIDE
-        reduced_area_side = int(world.Area.AREA_SIDE/2)
-        area_height = int(area.height()/10)
-        for x in range(0,reduced_area_side):
-            z_list = []
-            grid += [z_list]
-            for z in range(0,reduced_area_side):
-                y = random.random()
-                height = float(noise.pnoise3(x,z,y,octaves=1,persistence=0.9))*area_height*12
-                new_tile = Tile((x,z))
-                new_tile.noise = height
-                z_list += [new_tile]
-
-        for pa in range(0,int(abs(area_height-16)/2)):
-            if pa == 4:
-                break
-            for x in range(0,reduced_area_side):
-                d_string = ''
-                for z in range(0,reduced_area_side):
-                    ns = 1
-                    height = grid[x][z].noise
-                    for n_pos in [(1,0),(0,1),(-1,0),(0,-1),  (1,1),(-1,1),(-1,-1),(1,-1)]:
-                        try:
-                            ns +=1
-                            height += grid[x+n_pos[0]][z+n_pos[1]].noise
-                        except IndexError as e:
-                            pass
-                    grid[x][z].noise = int(height / ns)
-        for x, z_list in enumerate(grid):
-            for z, tile in enumerate(z_list):
-                for y in range(5,5+)
-                grid[x][z].add
-
-            '''
-        self.overworld = []
+    def create_tile_grid(self):
         neighbors = [(1,0),(-1,0),(0,1),(0,-1),
                      (1,1),(1,-1),(-1,1),(-1,-1)]
         grid = []
@@ -87,7 +37,6 @@ class Map:
             for z in range(0,world.Area.AREA_SIDE):
                 new_tile = Tile((x,z))
                 new_tile_index = (x * world.Area.AREA_SIDE) + z
-                new_tile.add_entity(GroundBlock(15))
                 for pos in neighbors:
                     n_pos = (x+pos[0],z+pos[1])
                     neighbor_index = (n_pos[0] * world.Area.AREA_SIDE) + n_pos[1]
@@ -99,56 +48,55 @@ class Map:
                     except Exception as e:
                         continue
                 z_list += [new_tile]
-        sub_area_side = self.get_sub_area_side(area)
-        rect_base_size = self.rect_base_size(area)
-        side_max = int(world.Area.AREA_SIDE/sub_area_side)
-        for x in range(0,sub_area_side):
-            for z in range(0,sub_area_side):
-                rect = self.get_random_size_rect(x * side_max,z * side_max,rect_base_size)
-                height = range(16,16+self.get_random_height(area))
-                for tile_x in range(rect[0],rect[2]):
-                    for tile_z in range(rect[1],rect[3]):
-                        for y in height:
-                            try:
-                                grid[tile_x][tile_z].add_entity(GroundBlock(y))
-                            except IndexError as e:
-                                continue
-
-
-        for z_list in grid:
-            for tile in z_list:
-                self.overworld += [tile]
-        print("DONE, RETURN")
-
-    def create_map(self):
-        grid = {}
-        for x in range(0,15):
-            for z in range(0,15):
-                new_tile = Tile((x,z))
-                new_tile.add_entity(GroundBlock(0))
-                for neighbor_prospect in grid :
-                    x_diff = neighbor_prospect.pos[0] - new_tile.pos[0]
-                    z_diff = neighbor_prospect.pos[1] - new_tile.pos[1]
-                    if int(math.fabs(x_diff)) > 1 or int(math.fabs(z_diff)) > 1:
-                        continue
-                    neighbor_prospect.neighbors += [new_tile]
-                    new_tile.neighbors += [neighbor_prospect]
-                grid[new_tile.id] = new_tile
-        for y in range(0,10):
-            grid[50].add_entity(GroundBlock(y))
-
-        grid[49].add_entity(WaterBlock(1))
-        grid[70].add_entity(RampBlock(1))
-        #grid[75].add_entity(Card(1))
-        grid[71].add_entity(GroundBlock(1))
-        grid[72].add_entity(GroundBlock(1))
-        grid[72].add_entity(RampBlock(2))
-        grid[73].add_entity(GroundBlock(2))
-        grid[73].add_entity(GroundBlock(1))
-
         return grid
 
+    def create_ramps(self,game_map):
+        for index, tile in enumerate(game_map):
+            block = tile.entities[-1]
+            for n_pos in tile.neighbors:
+                neighbor = game_map[n_pos]
+                relative_vector = tile.relative_vector(neighbor)
+                if relative_vector[0] != 0 and relative_vector[1] != 0:
+                    continue
+                n_block = neighbor.entities[-1]
+                if n_block.y -1 == block.y and block.__class__ != RampBlock and n_block.__class__ != RampBlock:
+                    game_map[index].add_entity(RampBlock(n_block.y))
+                    break
 
+        return game_map
+
+    def create_overworld(self,area):
+        grid = self.create_tile_grid()
+        area_height = int(area.height()/10)
+        overworld = []
+        for x in range(0,world.Area.AREA_SIDE):
+            for z in range(0,world.Area.AREA_SIDE):
+                y = random.random()
+                height = (float(noise.pnoise3(x,z,y,octaves=1,persistence=0.9))*area_height*12)+5
+                grid[x][z].noise = height
+
+        for pa in range(0,int(abs(area_height-16)/2)):
+            if pa == 4:
+                break
+            for x in range(0,world.Area.AREA_SIDE):
+                for z in range(0,world.Area.AREA_SIDE):
+                    ns = 1
+                    height = grid[x][z].noise
+                    for n_pos in [(1,0),(0,1),(-1,0),(0,-1),  (1,1),(-1,1),(-1,-1),(1,-1)]:
+                        try:
+                            ns +=1
+                            height += grid[x+n_pos[0]][z+n_pos[1]].noise
+                        except IndexError as e:
+                            pass
+                    grid[x][z].noise = int(height / ns)
+        for z_list in grid:
+            for tile in z_list:
+                for y in range(tile.noise-2,tile.noise):
+                    tile.add_entity(GroundBlock(y))
+                overworld += [tile]
+        overworld = self.create_ramps(overworld)
+
+        return overworld
 
 class Tile:
 
@@ -199,6 +147,9 @@ class Tile:
         z = (self.pos[0] + self.pos[1]) / 2
         return (x,z)
 
+    def relative_vector(self,tile):
+        return (self.pos[0] - tile.pos[0], self.pos[1] - tile.pos[1])
+
     def raycast(self, game_map, y1, target_tile, y2):
 
         if self.pos == target_tile.pos:
@@ -206,7 +157,6 @@ class Tile:
             return
 
         result = Raycast.cast(self, target_tile)
-        print("doing raycast between point: ", self.pos, " and ", target_tile.pos )
 
         y_factor = (y2-y1)/len(result)
         next_tile = self
