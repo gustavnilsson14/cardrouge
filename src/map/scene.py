@@ -60,7 +60,7 @@ class Map:
                     continue
                 n_block = neighbor.entities[-1]
                 if n_block.y -1 == block.y and block.__class__ != RampBlock and n_block.__class__ != RampBlock:
-                    game_map[index].add_entity(RampBlock(n_block.y))
+                    game_map[index].add_entity(RampBlock(n_block.y,relative_vector))
                     break
 
         return game_map
@@ -93,7 +93,7 @@ class Map:
         for z_list in grid:
             for tile in z_list:
                 for y in range(tile.noise-4,tile.noise):
-                    tile.add_entity(GroundBlock(y))
+                    tile.add_entity(DirtGrassBlock(y))
                 overworld += [tile]
         overworld = self.create_ramps(overworld)
 

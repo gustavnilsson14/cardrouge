@@ -1,3 +1,4 @@
+import random
 from entity import Block
 
 class SolidBlock(Block):
@@ -21,12 +22,19 @@ class GroundBlock(SolidBlock):
         SolidBlock.__init__(self,y)
         self.image = "res/sprites/blocks/cliffgrass.png"
 
-class RampBlock(SolidBlock):
+class DirtGrassBlock(SolidBlock):
 
     def __init__(self,y):
         SolidBlock.__init__(self,y)
+        self.image = "res/sprites/blocks/grass/dirt_grass_%d.png"%(int(random.randint(1,2)),)
+
+class RampBlock(SolidBlock):
+
+    def __init__(self,y,relative_vector):
+        SolidBlock.__init__(self,y)
         self.offset_next_height = -20
-        self.image = "res/sprites/blocks/clifframp.png"
+        self.image = "res/sprites/blocks/grass/ramps/ramp_%d_%d.png"%(relative_vector[0],relative_vector[1])
+
 
     def move_into(self,target):
         target.y += 1
