@@ -1,5 +1,5 @@
 import random, math
-from scene import *
+from place import *
 
 class Region:
 
@@ -132,7 +132,10 @@ class Area:
             grid += [z_list]
 
     def generate_overworld(self):
-        self.map = Map(self)
+        self.place = OverWorld(self)
+
+    def generate_dungeon(self):
+        self.place = Dungeon(self)
 
     def get_diff(self,value,avg):
         if value < avg:

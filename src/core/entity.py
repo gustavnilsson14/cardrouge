@@ -33,6 +33,7 @@ class Unit(Entity):
         self.tile = tile
         self.tile.entities += [self]
         self.transparent = 1
+        self.buffs = []
 
     def move(self,game_map,vector):
         target = self.tile.get_neighbor(game_map,vector)

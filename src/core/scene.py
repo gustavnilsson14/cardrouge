@@ -1,9 +1,7 @@
-import arcade, random, math,time,noise
-from utilities import *
 from block import *
 from item import *
+from utilities import *
 import world
-from bisect import bisect_left
 import uuid
 
 class Map:
@@ -18,37 +16,13 @@ class Map:
     }
 
     def __init__(self,area):
-        self.sub_area_size = int(world.Area.AREA_SIDE / 40)
-        self.overworld = self.create_overworld(area)
+        self.area = area
 
     def pad_debug_char(self,char,padding):
         new_char = char
         for i in range(len(char),padding):
             new_char = new_char + '.'
         return new_char
-
-    def create_tile_grid(self):
-        neighbors = [(1,0),(-1,0),(0,1),(0,-1),
-                     (1,1),(1,-1),(-1,1),(-1,-1)]
-        grid = []
-        for x in range(0,world.Area.AREA_SIDE):
-            z_list = []
-            grid += [z_list]
-            for z in range(0,world.Area.AREA_SIDE):
-                new_tile = Tile((x,z))
-                new_tile_index = (x * world.Area.AREA_SIDE) + z
-                for pos in neighbors:
-                    n_pos = (x+pos[0],z+pos[1])
-                    neighbor_index = (n_pos[0] * world.Area.AREA_SIDE) + n_pos[1]
-                    if neighbor_index < 0:
-                        continue
-                    try:
-                        grid[n_pos[0]][n_pos[1]].neighbors += [new_tile_index]
-                        new_tile.neighbors += [neighbor_index]
-                    except Exception as e:
-                        continue
-                z_list += [new_tile]
-        return grid
 
     def create_ramps(self,game_map):
         for index, tile in enumerate(game_map):
@@ -62,42 +36,7 @@ class Map:
                 if n_block.y -1 == block.y and block.__class__ != RampBlock and n_block.__class__ != RampBlock:
                     game_map[index].add_entity(RampBlock(n_block.y,relative_vector))
                     break
-
         return game_map
-
-    def create_overworld(self,area):
-        grid = self.create_tile_grid()
-        area_height = int(area.height()/10)
-        area_height = 3
-        overworld = []
-        for x in range(0,world.Area.AREA_SIDE):
-            for z in range(0,world.Area.AREA_SIDE):
-                y = random.random()
-                height = (float(noise.pnoise3(x,z,y,octaves=1,persistence=0.9))*area_height*12)+5
-                grid[x][z].noise = height
-
-        for pa in range(0,int(abs(area_height-16)/2)):
-            if pa == 6:
-                break
-            for x in range(0,world.Area.AREA_SIDE):
-                for z in range(0,world.Area.AREA_SIDE):
-                    ns = 1
-                    height = grid[x][z].noise
-                    for n_pos in [(1,0),(0,1),(-1,0),(0,-1),  (1,1),(-1,1),(-1,-1),(1,-1)]:
-                        try:
-                            ns +=1
-                            height += grid[x+n_pos[0]][z+n_pos[1]].noise
-                        except IndexError as e:
-                            pass
-                    grid[x][z].noise = int(height / ns)
-        for z_list in grid:
-            for tile in z_list:
-                for y in range(tile.noise-4,tile.noise):
-                    tile.add_entity(DirtGrassBlock(y))
-                overworld += [tile]
-        overworld = self.create_ramps(overworld)
-
-        return overworld
 
 class Tile:
 
@@ -170,12 +109,6 @@ class Tile:
                 return next_tile
 
         return 0
-
-class Voxel:
-
-    def __init__(self):
-        self.block = 0
-        self.entities = []
 
 class Camera:
 
