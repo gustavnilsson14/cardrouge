@@ -1,4 +1,4 @@
-import arcade, random, math,time,noise
+import arcade, random, math,time,opensimplex
 from utilities import *
 from block import *
 from item import *
@@ -11,6 +11,7 @@ class OverWorld(Map):
 
     def __init__(self,area):
         Map.__init__(self,area)
+        self.noise = opensimplex.OpenSimplex(area.seed)
         self.map = self.create_overworld()
 
     def create_tile_grid(self):
@@ -39,12 +40,12 @@ class OverWorld(Map):
     def create_overworld(self):
         grid = self.create_tile_grid()
         area_height = int(self.area.height()/10)
-        area_height = 3
+        area_height = 4
         overworld = []
         for x in range(0,world.Area.AREA_SIDE):
             for z in range(0,world.Area.AREA_SIDE):
                 y = random.random()
-                height = (float(noise.pnoise3(x,z,y,octaves=1,persistence=0.9))*area_height*12)+5
+                height = (float(self.noise.noise2d(x,z))*area_height*12)+5
                 grid[x][z].noise = height
 
         for pa in range(0,int(abs(area_height-16)/2)):

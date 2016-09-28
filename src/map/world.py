@@ -65,7 +65,7 @@ class Area:
         self.subregion_center = subregion_center
         self.stats = (region.temp, subregion.rain,subregion.height)
         self.type = ''
-        self.seed = random.random()
+        self.seed = int(random.random() * 10000000)
         self.entry_point = (0,0)
         self.map = None
 

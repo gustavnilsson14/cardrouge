@@ -7,6 +7,7 @@ Artwork from http://kenney.nl
 """
 import arcade,time,sys
 from multiprocessing import Process, Queue
+sys.path.append('lib')
 sys.path.append('src')
 sys.path.append('src/core')
 sys.path.append('src/gameobject')
