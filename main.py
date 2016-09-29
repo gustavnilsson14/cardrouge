@@ -45,7 +45,7 @@ if __name__ == '__main__':
     defaults = {
         'width': 800,
         'height': 600,
-        'scaling': 1.5,
+        'scaling': 1.0,
         'tile_size': 30
     }
 

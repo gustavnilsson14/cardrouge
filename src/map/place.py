@@ -75,6 +75,10 @@ class Dungeon(Map):
     def __init__(self,area):
         Map.__init__(self,area)
         self.max_y = 5
+        self.grid = self.create_empty_grid()
+        self.rooms = []
+        self.junctions = []
+        self.corridoors = []
         self.map = self.create_dungeon_level()
 
     def create_empty_grid(self):
@@ -82,29 +86,120 @@ class Dungeon(Map):
         for x in range(0,world.Area.AREA_SIDE):
             z_list = []
             for z in range(0,world.Area.AREA_SIDE):
-                z_list += [None]
+                y_list = []
+                for y in range(0,world.Area.AREA_SIDE):
+                    y_list += [0]
+                z_list += [y_list]
             grid += [z_list]
         return grid
 
     def create_dungeon_level(self):
-        grid = self.create_empty_grid()
-        dungeon = []
-        room_count = 5
-        junction_count = 5
-        start_room = Room(grid)
+        print("-"*50)
+        print("GEN START")
+        print("-"*50)
+        while len(self.rooms) < 3:
+            self.rooms += [Room(self)]
+        for x in range(0,world.Area.AREA_SIDE):
+            for z in range(0,world.Area.AREA_SIDE):
+                d_s = ''
+                for y in range(0,world.Area.AREA_SIDE):
+                    d_s += str(self.grid[x][z][y])
+                print(d_s)
+        print("-"*50)
+        print("GEN STOP")
+        print("-"*50)
+        return self.grid_to_list([],-1,self.get_start_pos())
+
+    def get_start_pos(self):
+        for x in range(0,world.Area.AREA_SIDE):
+            for z in range(0,world.Area.AREA_SIDE):
+                for y in range(0,world.Area.AREA_SIDE):
+                    if self.grid[x][z][y] != 0:
+                        return (x,z)
+
+    def grid_to_list(self,dungeon=[],previous_tile=-1,pos=(0,0)):
+        x = pos[0]
+        z = pos[1]
+        if Space.pos_within_grid((x,z,0)) != 1:
+            return dungeon
+        is_tile = 0
+        for entity in self.grid[x][z]:
+            if entity != 0:
+                is_tile = 1
+        if is_tile == 0:
+            return dungeon
+        new_tile = Tile((x,z))
+        dungeon += [new_tile]
+        if previous_tile != -1:
+            new_tile.neighbors += [dungeon.index(previous_tile)]
+            previous_tile.neighbors += [dungeon.index(new_tile)]
+
+        current_tile = len(dungeon)
+        neighbors = [(1,0),(-1,0),(0,1),(0,-1)]
+        for n_pos in neighbors:
+            
+            new_pos = (x+n_pos[0],z+n_pos[1])
+            self.grid_to_list(dungeon,previous_tile,new_pos)
+
+        '''
+        for x, z_list in enumerate(self.grid):
+            for z, tile in enumerate(z_list):
+                entities = []
+                for y, entity in enumerate(tile):
+                    if entity != 1:
+                        entities += GroundBlock(y)
+                if len(entities) == 0:
+                    continue
+                new_tile = Tile((x,z))
+                for entitiy in entities:
+                    new_tile.add_entity
+                dungeon += [new_tile]
+        '''
         return dungeon
+
+    def set_neighbors(self,pos):
+
+        pass
+
 
 class Space:
 
-    def __init__(self,pos,max_exits,size):
-        self.pos = pos
-        self.max_exits = max_exits
+    def __init__(self,place,size):
         self.size = size
+        self.pos = Space.get_random_position()
+        self.insert_into_grid(place)
+
+    def insert_into_grid(self,place):
+        max_pos = (self.pos[0]+self.size,self.pos[1]+self.size,self.pos[2]+self.size)
+        if Space.pos_within_grid(max_pos) != 1:
+            return
+        for x in range(self.pos[0],self.pos[0]+self.size):
+            for z in range(self.pos[1],self.pos[1]+self.size):
+                for y in range(self.pos[2],self.pos[2]+self.size):
+                    place.grid[x][z][y] = 1
+
+    @staticmethod
+    def pos_within_grid(pos):
+        if pos[0] > world.Area.AREA_SIDE-1:
+            return 0
+        if pos[1] > world.Area.AREA_SIDE-1:
+            return 0
+        if pos[2] > world.Area.AREA_SIDE-1:
+            return 0
+        return 1
+
+    @staticmethod
+    def get_random_position():
+        return (
+            int(random.random()*world.Area.AREA_SIDE),
+            int(random.random()*world.Area.AREA_SIDE),
+            int(random.random()*world.Area.AREA_SIDE)
+        )
 
 class Room(Space):
 
-    def __init__(self,pos=(0,0,0),max_exits=1,size=5):
-        Space.__init__(self,pos,max_exits,size)
+    def __init__(self,place,size=3):
+        Space.__init__(self,place,size)
 
 class Junction(Space):
 

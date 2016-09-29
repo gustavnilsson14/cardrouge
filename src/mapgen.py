@@ -88,8 +88,8 @@ class WorldGen(MapGen):
         random.shuffle(self.edge_areas)
         start_area = self.edge_areas[0]
         start_area.init_entry_point()
-        start_area.generate_dungeon()
         start_area.generate_overworld()
+        start_area.generate_dungeon()
         self.update_game_map(start_area,start_area.entry_point)
 
     def update_game_map(self,area,entry_point):
