@@ -7,7 +7,7 @@ class Npc(Controllable):
     def __init__(self, game_map):
         Controllable.__init__(self, game_map)
         for i in range(0,10):
-            self.addUnit(TestUnit(30,game_map[i]))
+            self.addUnit(TestUnit(30,game_map[0]))
 
     def update(self):
         for entity in self.controllable_entities:

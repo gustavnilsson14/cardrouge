@@ -27,6 +27,7 @@ class Player(Controllable):
             self.keys_pressed.remove(data)
 
     def handle_pressed_keys(self,key = None):
+        self.has_update = 1
         for key in self.keys_pressed:
             if key == arcade.key.UP:
                 self.move_entity((1,0))
@@ -42,7 +43,6 @@ class Player(Controllable):
                 Camera.clip_y -= 1
 
     def move_entity(self,vector):
-        self.has_update = 1
         self.controllable_entities[0].move(self.game_map,vector)
         tile = self.controllable_entities[0].tile
         self.fov = self.controllable_entities[0].get_fov(self.game_map)

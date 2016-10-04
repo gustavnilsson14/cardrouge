@@ -99,16 +99,19 @@ class Dungeon(Map):
         print("-"*50)
         while len(self.rooms) < 3:
             self.rooms += [Room(self)]
+
         for x in range(0,world.Area.AREA_SIDE):
             for z in range(0,world.Area.AREA_SIDE):
                 d_s = ''
                 for y in range(0,world.Area.AREA_SIDE):
                     d_s += str(self.grid[x][z][y])
                 print(d_s)
+
         print("-"*50)
         print("GEN STOP")
         print("-"*50)
-        return self.grid_to_list([],-1,self.get_start_pos())
+        dungeon = self.grid_to_list([],-1,self.get_start_pos())
+        return dungeon
 
     def get_start_pos(self):
         for x in range(0,world.Area.AREA_SIDE):
@@ -116,45 +119,41 @@ class Dungeon(Map):
                 for y in range(0,world.Area.AREA_SIDE):
                     if self.grid[x][z][y] != 0:
                         return (x,z)
+        return (0,0)
 
     def grid_to_list(self,dungeon=[],previous_tile=-1,pos=(0,0)):
+        print("-"*50)
+        print(pos)
+        print("-"*50)
         x = pos[0]
         z = pos[1]
         if Space.pos_within_grid((x,z,0)) != 1:
             return dungeon
         is_tile = 0
+        if type(self.grid[x][z]) != list:
+            self.grid[x][z].neighbors += [dungeon.index(previous_tile)]
+            previous_tile.neighbors += [dungeon.index(self.grid[x][z])]
+            return dungeon
         for entity in self.grid[x][z]:
             if entity != 0:
                 is_tile = 1
+                break
         if is_tile == 0:
             return dungeon
         new_tile = Tile((x,z))
+        for y, entity in enumerate(self.grid[x][z]):
+            if entity != 0:
+                new_tile.add_entity(DirtGrassBlock(y))
         dungeon += [new_tile]
+        self.grid[x][z] = new_tile
         if previous_tile != -1:
             new_tile.neighbors += [dungeon.index(previous_tile)]
             previous_tile.neighbors += [dungeon.index(new_tile)]
 
-        current_tile = len(dungeon)
         neighbors = [(1,0),(-1,0),(0,1),(0,-1)]
         for n_pos in neighbors:
-            
             new_pos = (x+n_pos[0],z+n_pos[1])
-            self.grid_to_list(dungeon,previous_tile,new_pos)
-
-        '''
-        for x, z_list in enumerate(self.grid):
-            for z, tile in enumerate(z_list):
-                entities = []
-                for y, entity in enumerate(tile):
-                    if entity != 1:
-                        entities += GroundBlock(y)
-                if len(entities) == 0:
-                    continue
-                new_tile = Tile((x,z))
-                for entitiy in entities:
-                    new_tile.add_entity
-                dungeon += [new_tile]
-        '''
+            self.grid_to_list(dungeon,new_tile,new_pos)
         return dungeon
 
     def set_neighbors(self,pos):
@@ -176,7 +175,17 @@ class Space:
         for x in range(self.pos[0],self.pos[0]+self.size):
             for z in range(self.pos[1],self.pos[1]+self.size):
                 for y in range(self.pos[2],self.pos[2]+self.size):
-                    place.grid[x][z][y] = 1
+                    if self.pos3d_is_edge((x,z,y)):
+                        place.grid[x][z][y] = 1
+
+    def pos3d_is_edge(self,pos):
+        if pos[0] == range(self.pos[0],self.pos[0]+self.size)[0] or pos[0] == range(self.pos[0],self.pos[0]+self.size)[-1] :
+            return 1
+        if pos[1] == range(self.pos[1],self.pos[1]+self.size)[0] or pos[1] == range(self.pos[1],self.pos[1]+self.size)[-1] :
+            return 1
+        if pos[2] == range(self.pos[2],self.pos[2]+self.size)[0] or pos[2] == range(self.pos[2],self.pos[2]+self.size)[-1] :
+            return 1
+        return 0
 
     @staticmethod
     def pos_within_grid(pos):
@@ -198,7 +207,7 @@ class Space:
 
 class Room(Space):
 
-    def __init__(self,place,size=3):
+    def __init__(self,place,size=7):
         Space.__init__(self,place,size)
 
 class Junction(Space):
