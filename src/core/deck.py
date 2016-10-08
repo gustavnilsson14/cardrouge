@@ -27,8 +27,9 @@ class Deck(Card_list):
 
 class Hand(Card_list):
 
-    def __init__(self, cards = []):
+    def __init__(self, cards = [], max_size = 5):
         Card_list.__init__(self, cards)
+        self.max_size = max_size
 
     def play_card(self, index):
         self.list.pop(index)

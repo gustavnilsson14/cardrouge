@@ -1,6 +1,5 @@
 from deck import *
 
-
 class Entity:
 
     def __init__(self,y):
@@ -39,6 +38,17 @@ class Unit(Entity):
         self.transparent = 1
         self.buffs = []
         self.deck = Deck()
+        self.hand = Hand()
+        self.discard_pile = Discard_pile()
+
+    def play_card(self, index):
+        card = self.hand.play_card(index)
+        self.discard_pile.add(card)
+        return card
+
+    def draw_card(self):
+        card = self.deck.draw_card()
+        hand.add(card)
 
     def move(self,game_map,vector):
         target = self.tile.get_neighbor(game_map,vector)
