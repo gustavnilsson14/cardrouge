@@ -161,6 +161,9 @@ class Space:
         max_pos = (self.pos[0]+self.size,self.pos[1]+self.size,self.pos[2]+self.size)
         if Space.pos_within_grid(max_pos) != 1:
             return 0
+        for room in place.rooms:
+            if Space.overlaps(self,room):
+                return 0
         for x in range(self.pos[0],self.pos[0]+self.size):
             for z in range(self.pos[1],self.pos[1]+self.size):
                 for y in range(self.pos[2],self.pos[2]+self.size):
@@ -191,6 +194,29 @@ class Space:
         return 1
 
     @staticmethod
+    def overlaps(space1,space2):
+        space1_xrange = range(space1.pos[0],space1.pos[0]+space1.size)
+        space2_xrange = range(space2.pos[0],space2.pos[0]+space2.size)
+
+        space1_zrange = range(space1.pos[1],space1.pos[1]+space1.size)
+        space2_zrange = range(space2.pos[1],space2.pos[1]+space2.size)
+
+        space1_yrange = range(space1.pos[2],space1.pos[2]+space1.size)
+        space2_yrange = range(space2.pos[2],space2.pos[2]+space2.size)
+        if (space1.pos[0] in space2_xrange or space2.pos[0] in space1_xrange) and \
+            (space1.pos[1] in space2_zrange or space2.pos[1] in space1_zrange) and \
+            (space1.pos[2] in space2_yrange or space2.pos[2] in space1_yrange):
+            return 1
+        return 0
+
+
+
+        return 0
+        #if space1.pos in range(space2.pos,space2.pos+space2.size):
+        #    return 1
+
+
+    @staticmethod
     def get_random_position():
         return (
             int(random.random()*world.Area.AREA_SIDE),
@@ -199,7 +225,7 @@ class Space:
 
 class Room(Space):
 
-    def __init__(self,place,size=7):
+    def __init__(self,place,size=5):
         Space.__init__(self,place,size)
 
 class Junction(Space):
