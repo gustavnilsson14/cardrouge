@@ -9,6 +9,7 @@ from world import *
 import time
 from utilities import *
 from npc import *
+from ui import UI
 
 class Game(JoinableObject):
 
@@ -16,6 +17,8 @@ class Game(JoinableObject):
         Camera.initialize()
         JoinableObject.__init__(self,queues)
         self.player = None
+        self.ui = UI()
+        self.ui.x = 1337
         self.mapgen_process = self.start_child_process(WorldGen)
         self.run(WorldGen.generate, {})
         self.wait_join()
@@ -30,17 +33,8 @@ class Game(JoinableObject):
 
     def start(self,package):
         test_map = package.get('map')
-        d = 0
         start_pos = package.get('start_pos')
-        #print("-"*50)
-        #print(test_map[-1].entities)
-        #player_unit = TestUnit(30,test_map[start_tile_index-1])
-        print("-"*50)
-        print(start_pos)
-        print("-"*50)
         player_unit = TestUnit(start_pos[1],test_map[start_pos[0]])
-        #print(test_map[start_tile_index].entities)
-        print("-"*50)
         self.player = Player(player_unit, test_map)
         self.player.fov = self.player.controllable_entities[0].get_fov(test_map)
         self.npc = Npc(test_map)
@@ -48,9 +42,6 @@ class Game(JoinableObject):
         self.player.set_camera()
         self.player.has_update = 1
 
-
-
-        #test_map.raycast(test_map.tiles[50], test_map.tiles[87])
         while 1:
             self.update()
             time.sleep(1/60)
