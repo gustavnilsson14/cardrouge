@@ -80,6 +80,8 @@ class Dungeon(Map):
         self.junctions = []
         self.corridoors = []
         self.map = self.create_dungeon_level()
+        start_pos_center = self.rooms[0].get_center()
+        self.start_pos = (self.get_tile_index(start_pos_center[:2]),start_pos_center[2])
 
     def create_empty_grid(self):
         grid = []
@@ -94,24 +96,19 @@ class Dungeon(Map):
         return grid
 
     def create_dungeon_level(self):
-        print("-"*50)
-        print("GEN START")
-        print("-"*50)
         while len(self.rooms) < 3:
-            self.rooms += [Room(self)]
+            room = Room(self)
+            if room.inserted == 1:
+                self.rooms += [room]
 
-        for x in range(0,world.Area.AREA_SIDE):
-            for z in range(0,world.Area.AREA_SIDE):
-                d_s = ''
-                for y in range(0,world.Area.AREA_SIDE):
-                    d_s += str(self.grid[x][z][y])
-                print(d_s)
-
-        print("-"*50)
-        print("GEN STOP")
-        print("-"*50)
         dungeon = self.grid_to_list([],-1,self.get_start_pos())
         return dungeon
+
+    def get_tile_index(self,pos):
+        for index,tile in enumerate(self.map):
+            if tile.pos == pos:
+                return index
+        return 0
 
     def get_start_pos(self):
         for x in range(0,world.Area.AREA_SIDE):
@@ -122,9 +119,6 @@ class Dungeon(Map):
         return (0,0)
 
     def grid_to_list(self,dungeon=[],previous_tile=-1,pos=(0,0)):
-        print("-"*50)
-        print(pos)
-        print("-"*50)
         x = pos[0]
         z = pos[1]
         if Space.pos_within_grid((x,z,0)) != 1:
@@ -156,27 +150,23 @@ class Dungeon(Map):
             self.grid_to_list(dungeon,new_tile,new_pos)
         return dungeon
 
-    def set_neighbors(self,pos):
-
-        pass
-
-
 class Space:
 
     def __init__(self,place,size):
         self.size = size
         self.pos = Space.get_random_position()
-        self.insert_into_grid(place)
+        self.inserted = self.insert_into_grid(place)
 
     def insert_into_grid(self,place):
         max_pos = (self.pos[0]+self.size,self.pos[1]+self.size,self.pos[2]+self.size)
         if Space.pos_within_grid(max_pos) != 1:
-            return
+            return 0
         for x in range(self.pos[0],self.pos[0]+self.size):
             for z in range(self.pos[1],self.pos[1]+self.size):
                 for y in range(self.pos[2],self.pos[2]+self.size):
                     if self.pos3d_is_edge((x,z,y)):
                         place.grid[x][z][y] = 1
+        return 1
 
     def pos3d_is_edge(self,pos):
         if pos[0] == range(self.pos[0],self.pos[0]+self.size)[0] or pos[0] == range(self.pos[0],self.pos[0]+self.size)[-1] :
@@ -186,6 +176,9 @@ class Space:
         if pos[2] == range(self.pos[2],self.pos[2]+self.size)[0] or pos[2] == range(self.pos[2],self.pos[2]+self.size)[-1] :
             return 1
         return 0
+
+    def get_center(self):
+        return TupleHelper.add_i(self.pos,int(self.size/2))
 
     @staticmethod
     def pos_within_grid(pos):
@@ -202,8 +195,7 @@ class Space:
         return (
             int(random.random()*world.Area.AREA_SIDE),
             int(random.random()*world.Area.AREA_SIDE),
-            int(random.random()*world.Area.AREA_SIDE)
-        )
+            int(random.random()*world.Area.AREA_SIDE))
 
 class Room(Space):
 
