@@ -1,3 +1,6 @@
+from deck import *
+
+
 class Entity:
 
     def __init__(self,y):
@@ -9,6 +12,7 @@ class Entity:
         self.solid = 0
         self.draw_priority = 0
         self.image = "link-perfect-small.png"
+
 
     def destroy(self):
         pass
@@ -34,6 +38,7 @@ class Unit(Entity):
         self.tile.entities += [self]
         self.transparent = 1
         self.buffs = []
+        self.deck = Deck()
 
     def move(self,game_map,vector):
         target = self.tile.get_neighbor(game_map,vector)
