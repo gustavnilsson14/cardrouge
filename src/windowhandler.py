@@ -19,6 +19,7 @@ class WindowHandler(arcade.Window,JoinableObject):
         # Sprite lists
         self.all_sprites_list = arcade.SpriteList()
         self.all_ui_list = arcade.SpriteList()
+        self.all_text_list = []
 
         self.setup()
 
@@ -57,11 +58,15 @@ class WindowHandler(arcade.Window,JoinableObject):
 
     def add_ui(self,elements):
         self.remove_ui()
+        self.all_text_list = []
         for element in elements:
             element_sprite = arcade.Sprite(element.image, self.defaults.get('ui_scaling'))
             element_sprite.center_x = element.pos[0]
             element_sprite.center_y = element.pos[1]
             self.all_ui_list.append(element_sprite)
+            if element.text == None:
+                continue
+            self.all_text_list += [element]
 
     def add_sprites(self,data):
         self.remove_sprites()
@@ -102,6 +107,9 @@ class WindowHandler(arcade.Window,JoinableObject):
         self.join()
         self.all_sprites_list.draw()
         self.all_ui_list.draw()
+        for element in self.all_text_list:
+            text_pos = TupleHelper.add_t(element.pos,element.text.pos)
+            arcade.draw_text(element.text.text, text_pos[0], text_pos[1], element.text.color, element.text.font_size)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:

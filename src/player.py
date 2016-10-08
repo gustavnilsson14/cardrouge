@@ -14,8 +14,6 @@ class Player(Controllable):
         self.fov = []
         self.ui = ui.UI()
 
-        self.ui.add_element(ui.Element((40,40),'res/ui/cards/base.png'))
-
     def key_press(self,data):
         if self.controllable_entities[0] == None:
             return
@@ -47,7 +45,13 @@ class Player(Controllable):
         elif key == arcade.key.Z:
             Camera.clip_y -= 1
         elif key == arcade.key.D:
-            self.controllable_entities[0].draw_card()
+            card = self.controllable_entities[0].draw_card()
+            card_index = self.controllable_entities[0].hand.list.index(card)
+            ui_x = (card_index)*80
+            new_element = ui.Element((40+ui_x,40),'res/ui/cards/base.png')
+            new_element.add_text(str(card_index),(20,20))
+            self.ui.add_element(new_element)
+            self.ui.has_update = 1
         else:
             self.ui.handle_key_press(key)
 

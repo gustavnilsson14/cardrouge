@@ -80,12 +80,13 @@ class Element:
         self.image = image
         self.text = None
 
-    def add_text(self,text,pos,color=arcade.color.BLACK):
-        self.text = Text(text,pos,color)
+    def add_text(self,text,pos,color=arcade.color.BLACK,font_size=14):
+        self.text = Text(text,pos,color,font_size)
 
 class Text:
 
-    def __init__(self,text,pos,color):
+    def __init__(self,text,pos,color,font_size):
         self.text = text
         self.pos = pos
         self.color = color
+        self.font_size = font_size
