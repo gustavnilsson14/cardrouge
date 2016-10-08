@@ -47,7 +47,7 @@ class Unit(Entity):
 
     def draw_card(self):
         card = self.deck.draw_card()
-        hand.add(card)
+        self.hand.add(card)
 
     def move(self,game_map,vector):
         target = self.tile.get_neighbor(game_map,vector)

@@ -6,12 +6,16 @@ class Card_list:
         self.list = cards
 
     def add(self, card):
+        if card == 0:
+            return 0
         self.list += card
 
     def shuffle(self):
         random.shuffle(self.list)
 
     def remove(self, index):
+        if len(self.list) == 0:
+            return 0;
         self.list.pop(index)
 
     def discard(self):
@@ -23,6 +27,8 @@ class Deck(Card_list):
         Card_list.__init__(self, cards)
 
     def draw_card(self):
+        if len(self.list) == 0:
+            return 0;
         return self.list.pop()
 
 class Hand(Card_list):
@@ -32,7 +38,10 @@ class Hand(Card_list):
         self.max_size = max_size
 
     def play_card(self, index):
-        self.list.pop(index)
+        if len(self.list) == 0:
+            return 0;
+        return self.list.pop(index)
+
 
 class Discard_pile(Card_list):
     def __init__(self, cards = []):
