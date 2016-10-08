@@ -5,6 +5,8 @@ class Card(Item):
     def __init__(self,y):
         Item.__init__(self,y)
 
+    def input(self, caster, target, position)
+        pass
 
 class Combat_card(Card):
 
