@@ -17,8 +17,7 @@ class Game(JoinableObject):
         Camera.initialize()
         JoinableObject.__init__(self,queues)
         self.player = None
-        self.ui = UI()
-        self.ui.x = 1337
+        self.ui = None
         self.mapgen_process = self.start_child_process(WorldGen)
         self.run(WorldGen.generate, {})
         self.wait_join()
@@ -30,6 +29,9 @@ class Game(JoinableObject):
             self.npc.update()
             self.run(WindowHandler.add_sprites, self.player.fov)
             self.player.has_update = 0
+        if self.ui.has_update:
+            self.run(WindowHandler.add_ui, self.ui.elements)
+            self.ui.has_update = 0
 
     def start(self,package):
         test_map = package.get('map')
@@ -41,6 +43,7 @@ class Game(JoinableObject):
         self.map_sprite_list = test_map
         self.player.set_camera()
         self.player.has_update = 1
+        self.ui = UI()
 
         while 1:
             self.update()
@@ -53,9 +56,3 @@ class Game(JoinableObject):
     def key_release(self,data):
         if self.player:
             self.player.key_release(data)
-
-class Test:
-
-    def __init__(self):
-        self.x = 10
-        self.y = 50

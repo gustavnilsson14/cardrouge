@@ -12,7 +12,6 @@ class Entity:
         self.draw_priority = 0
         self.image = "link-perfect-small.png"
 
-
     def destroy(self):
         pass
 

@@ -1,6 +1,7 @@
 import arcade
 from scene import Camera, Map
 from controllable import *
+import ui
 
 class Player(Controllable):
 
@@ -11,6 +12,9 @@ class Player(Controllable):
         #self.controllable_entity = controllable_entity
         self.has_update = 1
         self.fov = []
+        self.ui = ui.UI()
+
+        self.ui.add_element(ui.Element((40,40),'res/ui/cards/base.png'))
 
     def key_press(self,data):
         if self.controllable_entities[0] == None:
@@ -41,6 +45,8 @@ class Player(Controllable):
                 Camera.clip_y += 1
             elif key == arcade.key.Z:
                 Camera.clip_y -= 1
+            elif key == arcade.key.D:
+                self.controllable_entities[0].draw_card()
 
     def move_entity(self,vector):
         self.controllable_entities[0].move(self.game_map,vector)

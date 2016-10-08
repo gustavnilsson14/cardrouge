@@ -18,26 +18,6 @@ from message import *
 
 sys.setrecursionlimit(1500000)
 
-
-li =[]
-di = {}
-st = time.time()
-for v in range(0,100000):
-    li += [v]
-    di[v] = v
-print('gen took: %s seconds'%(str(time.time()-st),))
-
-st = time.time()
-for v in li:
-    if v == 100000:
-        break
-
-print('li took: %s seconds'%(str(time.time()-st),))
-
-st = time.time()
-for i in range(0,100000):
-    di.get(v)
-print('di took: %s seconds'%(str(time.time()-st),))
 #exit()
 
 if __name__ == '__main__':
@@ -46,7 +26,8 @@ if __name__ == '__main__':
         'width': 800,
         'height': 600,
         'scaling': 1.0,
-        'tile_size': 30
+        'tile_size': 30,
+        'ui_scaling': 1.0
     }
 
     windowhandler_in_q = Queue()
