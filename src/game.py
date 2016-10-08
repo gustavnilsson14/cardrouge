@@ -31,12 +31,14 @@ class Game(JoinableObject):
     def start(self,package):
         test_map = package.get('map')
         d = 0
-        start_tile_index = package.get('start_tile_index')
+        start_pos = package.get('start_pos')
         #print("-"*50)
         #print(test_map[-1].entities)
         #player_unit = TestUnit(30,test_map[start_tile_index-1])
-        print(test_map[0].entities)
-        player_unit = TestUnit(30,test_map[0])
+        print("-"*50)
+        print(start_pos)
+        print("-"*50)
+        player_unit = TestUnit(start_pos[1],test_map[start_pos[0]])
         #print(test_map[start_tile_index].entities)
         print("-"*50)
         self.player = Player(player_unit, test_map)

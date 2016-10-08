@@ -102,3 +102,25 @@ class Raycast:
 
 
         return result;
+
+class TupleHelper:
+
+    @staticmethod
+    def add_i(tuple1,i):
+        if len(tuple1) == 2:
+            return (tuple1[0]+i,tuple1[1]+i)
+        if len(tuple1) == 3:
+            return (tuple1[0]+i,tuple1[1]+i,tuple1[2]+i)
+        if len(tuple1) == 4:
+            return (tuple1[0]+i,tuple1[1]+i,tuple1[2]+i,tuple1[3]+i)
+        return (0,0)
+
+    @staticmethod
+    def add_t(tuple1,tuple2):
+        if len(tuple1) == 2:
+            return (tuple1[0]+tuple2[0],tuple1[1]+tuple2[1])
+        if len(tuple1) == 3:
+            return (tuple1[0]+tuple2[0],tuple1[1]+tuple2[1],tuple1[2]+tuple2[2])
+        if len(tuple1) == 4:
+            return (tuple1[0]+tuple2[0],tuple1[1]+tuple2[1],tuple1[2]+tuple2[2],tuple1[3]+tuple2[3])
+        return (0,0)

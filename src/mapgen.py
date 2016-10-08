@@ -90,12 +90,12 @@ class WorldGen(MapGen):
         start_area.init_entry_point()
         start_area.generate_overworld()
         start_area.generate_dungeon()
-        self.update_game_map(start_area,start_area.entry_point)
+        self.update_game_map(start_area)
 
-    def update_game_map(self,area,entry_point):
+    def update_game_map(self,area):
         package = {
             'map': area.place.map,
-            'start_tile_index': entry_point[0]*Area.AREA_SIDE+entry_point[1]
+            'start_pos': area.place.start_pos
         }
         self.run(game.Game.start,package)
 
