@@ -12,6 +12,7 @@ sys.path.append('src')
 sys.path.append('src/core')
 sys.path.append('src/gameobject')
 sys.path.append('src/map')
+sys.path.append('src/card')
 from game import *
 from windowhandler import WindowHandler
 from message import *

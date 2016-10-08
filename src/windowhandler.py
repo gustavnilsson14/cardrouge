@@ -111,6 +111,12 @@ class WindowHandler(arcade.Window,JoinableObject):
     def on_key_release(self, key, modifiers):
         self.run(game.Game.key_release,key)
 
+    def on_mouse_motion(self, x, y, dx, dy):
+        print(x,y)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        print(x,y)
+
     def animate(self, delta_time):
         """ Movement and game logic """
 

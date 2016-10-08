@@ -1,4 +1,5 @@
 from entity import Unit
+from magiccards import *
 
 class GroundUnit(Unit):
 
@@ -35,3 +36,5 @@ class TestUnit(GroundUnit):
 
     def __init__(self,y,tile):
         GroundUnit.__init__(self,y,tile)
+        self.deck.add( Fireball(-1) )
+        self.deck.add( SummonChair(-1) )

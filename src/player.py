@@ -19,6 +19,8 @@ class Player(Controllable):
     def key_press(self,data):
         if self.controllable_entities[0] == None:
             return
+        self.handle_key_press(data)
+        return
         if data in self.keys_pressed:
             return
         self.keys_pressed += [data]
@@ -29,6 +31,25 @@ class Player(Controllable):
             return
         if data in self.keys_pressed:
             self.keys_pressed.remove(data)
+
+    def handle_key_press(self,key=None):
+        self.has_update = 1
+        if key == arcade.key.UP:
+            self.move_entity((1,0))
+        elif key == arcade.key.DOWN:
+            self.move_entity((-1,0))
+        elif key == arcade.key.LEFT:
+            self.move_entity((0,1))
+        elif key == arcade.key.RIGHT:
+            self.move_entity((0,-1))
+        elif key == arcade.key.X:
+            Camera.clip_y += 1
+        elif key == arcade.key.Z:
+            Camera.clip_y -= 1
+        elif key == arcade.key.D:
+            self.controllable_entities[0].draw_card()
+        else:
+            self.ui.handle_key_press(key)
 
     def handle_pressed_keys(self,key = None):
         self.has_update = 1
@@ -47,6 +68,7 @@ class Player(Controllable):
                 Camera.clip_y -= 1
             elif key == arcade.key.D:
                 self.controllable_entities[0].draw_card()
+
 
     def move_entity(self,vector):
         self.controllable_entities[0].move(self.game_map,vector)
