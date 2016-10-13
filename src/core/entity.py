@@ -5,12 +5,13 @@ class Entity:
     def __init__(self,y):
         self.height = 30
         self.y = y
+        self.offset_pos = (0,0,0)
         self.offset_height = 0
         self.offset_next_height = 0
         self.stop_draw = 0
         self.solid = 0
         self.draw_priority = 0
-        self.image = "link-perfect-small.png"
+        self.image = "res/sprites/entities/units/link-perfect-small.png"
 
     def destroy(self):
         pass
@@ -31,21 +32,29 @@ class Unit(Entity):
 
     def __init__(self,y,tile):
         Entity.__init__(self,y)
+        self.active_card = 0
         self.offset_height = 0
         self.tile = tile
         self.tile.entities += [self]
         self.transparent = 1
         self.buffs = []
-        self.deck = Deck()
-        self.hand = Hand()
-        self.discard_pile = Discard_pile()
+        self.deck = Deck([])
+        self.hand = Hand([])
+        self.discard_pile = Discard_pile([])
 
-    def play_card(self, index):
-        card = self.hand.play_card(index)
-        self.discard_pile.add(card)
-        return card
+    def play_card(self, card):
+        if self.hand.play_card(card):
+            self.active_card = card
+            self.discard_pile.add(card)
+            return card
+        return 0
 
     def draw_card(self):
+        if self.deck.list == []:
+            print(self.discard_pile.list)
+            self.deck.list = self.discard_pile.list
+            self.discard_pile.list = []
+            self.deck.shuffle()
         card = self.deck.draw_card()
         self.hand.add(card)
         return card

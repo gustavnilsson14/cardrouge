@@ -1,16 +1,18 @@
 import arcade
 
 class Keys:
-    NUM_0 = 48
-    NUM_1 = 49
-    NUM_2 = 50
-    NUM_3 = 51
-    NUM_4 = 52
-    NUM_5 = 53
-    NUM_6 = 54
-    NUM_7 = 55
-    NUM_8 = 56
-    NUM_9 = 57
+    NUM = {
+        1:49,
+        2:50,
+        3:51,
+        4:52,
+        5:53,
+        6:54,
+        7:55,
+        8:56,
+        9:57,
+        0:48,
+    }
 
 class UI:
 
@@ -24,16 +26,19 @@ class UI:
 
     def init(self):
         self.elements = []
-        self.listeners = []
+        self.listeners = {}
         self.has_update = 1
-
 
     def handle_key_press(self,key=None):
         self.has_update = 1
+        if self.listeners.get(key) == None:
+            return 0
         for listener in self.listeners.get(key):
             obj = listener[0]
             method = listener[1]
-            getattr(obj,method)()
+            element = listener[2]
+            getattr(obj,method)(element)
+        return 1
 
     def add_element(self,element):
         if element in self.elements:
@@ -49,8 +54,21 @@ class UI:
         self.has_update = 1
         return 1
 
-    def add_listener(self,key,obj,method):
-        listener = (obj,method)
+    def remove_elements(self):
+        while len(self.elements) != 0:
+            self.elements.pop()
+
+    def remove_elements_by_entity(self,entity):
+        i = 0
+        while i < len(self.elements):
+            element = self.elements[i]
+            if element.entity == entity:
+                self.elements.pop(i)
+                continue
+            i+=1
+
+    def add_listener(self,key,obj,method,element):
+        listener = (obj,method,element)
         if self.listeners.get(key) == None:
             self.listeners[key] = [listener]
             return 1
@@ -60,25 +78,30 @@ class UI:
         return 1
 
     def remove_listeners(self,key):
+        print(key)
         if self.listeners.get(key) == None:
             return 0
         del self.listeners[key]
+        return 1
 
-    def remove_listener(self,key,obj,method):
-        listener = (obj,method)
+    def remove_listener(self,key,obj,method,element=None):
+        listener = (obj,method,element)
         if self.listeners.get(key) == None:
             return 0
         if listener not in self.listeners.get(key):
             return 0
         self.listeners[key].remove(listener)
+        if len(self.listeners[key]) == 0:
+            del self.listeners[key]
         return 1
 
 class Element:
 
-    def __init__(self,pos,image):
+    def __init__(self,pos,image,entity=None):
         self.pos = pos
         self.image = image
         self.text = None
+        self.entity = entity
 
     def add_text(self,text,pos,color=arcade.color.BLACK,font_size=14):
         self.text = Text(text,pos,color,font_size)

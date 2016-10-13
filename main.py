@@ -10,9 +10,10 @@ from multiprocessing import Process, Queue
 sys.path.append('lib')
 sys.path.append('src')
 sys.path.append('src/core')
+sys.path.append('src/states')
 sys.path.append('src/gameobject')
 sys.path.append('src/map')
-sys.path.append('src/card')
+sys.path.append('src/gameobject/card')
 from game import *
 from windowhandler import WindowHandler
 from message import *

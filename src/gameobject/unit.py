@@ -29,8 +29,11 @@ class AirUnit(Unit):
     def __init__(self,y,tile):
         Unit.__init__(self,y,tile)
 
-    def move(self,vector):
-        Unit.move(self,vector)
+    def move(self,game_map,vector):
+        Unit.move(self,game_map,vector)
+
+    def has_footing(self):
+        return 1
 
 class TestUnit(GroundUnit):
 
@@ -38,3 +41,21 @@ class TestUnit(GroundUnit):
         GroundUnit.__init__(self,y,tile)
         self.deck.add( Fireball(-1) )
         self.deck.add( SummonChair(-1) )
+        self.deck.add( Fireball(-1) )
+        self.deck.add( SummonChair(-1) )
+        self.deck.add( Fireball(-1) )
+        self.deck.add( SummonChair(-1) )
+        self.deck.add( Fireball(-1) )
+        self.deck.add( SummonChair(-1) )
+        self.deck.add( Fireball(-1) )
+        self.deck.add( SummonChair(-1) )
+        self.deck.add( Fireball(-1) )
+
+class Crosshair(AirUnit):
+
+    def __init__(self,y,tile):
+        AirUnit.__init__(self,y,tile)
+        self.image = "res/sprites/entities/units/crosshair.png"
+
+    def can_move_to(self,target):
+        return 1
